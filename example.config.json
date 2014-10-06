@@ -1,0 +1,9 @@
+{
+  "kvass": "http://127.0.0.1:6001",
+  "port": 6006,
+  "DrPublish": {
+    "width": 600,
+    "height": 338,
+    "background": "#000"
+  }
+}

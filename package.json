@@ -1,0 +1,35 @@
+{
+  "name": "chhaang",
+  "version": "0.0.0",
+  "description": "BRIK's plugin server.",
+  "main": "chhaang.js",
+  "scripts": {
+    "test": "echo No tests."
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/brikteknologier/chhaang"
+  },
+  "author": "Helge S. Holm <helge.holm@brik.no>",
+  "license": "proprietary",
+  "bugs": {
+    "url": "https://github.com/brikteknologier/chhaang/issues"
+  },
+  "homepage": "https://github.com/brikteknologier/chhaang",
+  "dependencies": {
+    "controller": "^0.6.2",
+    "express": "^3.17.5",
+    "imbibe": "^0.2.3",
+    "jade": "^1.7.0",
+    "logginator": "^1.1.8",
+    "nib": "^1.0.4",
+    "stylus": "^0.49.1",
+    "tagged-logger": "^1.0.3",
+    "winston": "^0.7.3",
+    "stoutmeal": "git+ssh://git@github.com:brikteknologier/stoutmeal.git",
+    "winston-tagged-http-logger": "^1.1.1"
+  },
+  "devDependencies": {
+    "mocha": "^1.21.4"
+  }
+}
