@@ -5,5 +5,14 @@
     "width": 600,
     "height": 338,
     "background": "#000"
+  },
+  "stoutmeal": {
+    "cookie": "authKey",
+    "loginUrl": "//localhost:6005/anonymous-login",
+    "neo4j": "http://localhost:7474",
+    "store": {
+      "type": "redis",
+      "host": "localhost"
+    }
   }
 }
