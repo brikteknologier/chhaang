@@ -7,5 +7,5 @@ module.exports = function(controller) {
     res.render('overview', { title: app.locals.title || 'BRIK' });
   });
 
-  controller.get('/', 'overview');
+  controller.get('/integration', 'overview');
 }
