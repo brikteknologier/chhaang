@@ -34,7 +34,7 @@ readConfig(function(config) {
   // jade
   app.set('view engine', 'jade');
   app.locals({ 
-    title: config.title
+    title: config.title || 'BRIK'
   });
 
   // authorization

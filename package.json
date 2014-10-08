@@ -24,6 +24,7 @@
     "jade": "^1.7.0",
     "logginator": "^1.1.8",
     "nib": "^1.0.4",
+    "node-aptoma-plugin-auth": "^1.1.0",
     "request": "^2.45.0",
     "stoutmeal": "git+ssh://git@github.com:brikteknologier/stoutmeal.git",
     "stylus": "^0.49.1",
