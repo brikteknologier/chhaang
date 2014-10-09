@@ -13,7 +13,7 @@ module.exports = function(controller) {
   });
 
   controller.define('drpublishIndex', function (req, res) {
-    res.render('drpublish/index', { defaults: app.settings.DrPublish });
+    res.render('drpublish/index', app.settings);
   });
 
   controller.define('drpublishAuth', aptomaAuthHandler);
