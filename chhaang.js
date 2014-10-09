@@ -7,7 +7,7 @@ var stylus = require('stylus');
 var _ = require('underscore');
 var nib = require('nib')();
 
-var configKeys = [ 'port', 'kvass', 'DrPublish' ];
+var configKeys = [ 'port', 'kvass' ];
 var readConfig = require('general-hammond')('chhaang', configKeys);
 var server = module.exports = http.createServer();
 
