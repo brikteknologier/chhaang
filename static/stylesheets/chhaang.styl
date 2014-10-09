@@ -1,0 +1,61 @@
+@import 'nib'
+
+$green_txt = #34d040
+$red_txt = #d03440
+$back = #010c03
+$enabled = lighten($green_txt, 30)
+$disabled = lighten($red_txt, 30)
+
+@font-face
+  font-family EditUndoLine
+  src url(/fonts/edunline.ttf)
+
+@keyframes badscreen
+  0%, 28%, 55%, 68%, 76.5%, 100%
+    opacity 0
+  30%
+    opacity 0.2
+  75.5%
+    opacity 0.3
+  76%
+    opacity 0.7
+
+.badscreen
+  pointer-events none
+  position fixed
+  top 0
+  left 0
+  bottom 0
+  right 0
+  background $back
+  opacity 0
+  animation-name badscreen
+  animation-iteration-count infinite
+  animation-duration 15s
+  animation-timing-function linear
+
+body
+  background $back
+  font-family EditUndoLine
+  font-size 20px
+  color $green_txt
+
+h1
+  font-weight normal
+  font-size: 30px
+
+h2
+  font-weight normal
+  font-size: 20px
+  margin-bottom: 0
+
+ul
+  margin-top: 0
+
+.disabled:after
+  color $disabled
+  content " disabled"
+
+.enabled:after
+  color $enabled
+  content " enabled"
