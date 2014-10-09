@@ -2,7 +2,10 @@ var Controller = require('controller');
 
 var aptomaAuthHandler = require('node-aptoma-plugin-auth')(
   'brik-video',
-  'DrPublish'
+  'DrPublish',
+  function pluginUrl(req) {
+    return 'https://' + (req.hostname || req.host) + req.path;
+  }
 );
 
 module.exports = function(app) {
