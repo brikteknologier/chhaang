@@ -7,6 +7,8 @@ module.exports = function(controller) {
 
   controller.get('/integration', 'overview');
 
-  if (app.settings.DrPublish)
-    require('./drpublish')(controller);
+  if (app.settings.DrPublish) {
+    var drPubController = require('./drpublish')(app);
+    app.use('/integration/drpublish/', drPubController);
+  }
 }
