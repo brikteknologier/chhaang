@@ -24,12 +24,12 @@ readConfig(function(config) {
 
   // stylus
   app.use(stylus.middleware({
-    src: __dirname + '/public',
+    src: __dirname + '/static',
     compile: function(str, path) {
       return stylus(str).set('filename', path).use(nib);
     }
   }));
-  app.use(express.static(__dirname + "/public"));
+  app.use(express.static(__dirname + "/static"));
 
   // jade
   app.set('view engine', 'jade');
