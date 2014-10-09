@@ -16,7 +16,7 @@ module.exports = function(app) {
   controller.define('drpublishAuth', aptomaAuthHandler);
   
   controller.get('/index', 'drpublishIndex');
-  controller.get('/authenticate', 'drpbublishAuth');
+  controller.get('/authenticate', 'drpublishAuth');
 
   return controller;
 }
