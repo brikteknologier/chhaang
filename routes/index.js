@@ -8,5 +8,5 @@ module.exports = function(controller) {
   controller.get('/integration', 'overview');
 
   if (app.settings.DrPublish)
-    require('drpublish')(controller);
+    require('./drpublish')(controller);
 }
