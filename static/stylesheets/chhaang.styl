@@ -10,6 +10,18 @@ $disabled = lighten($red_txt, 10)
   font-family EditUndoLine
   src url(/fonts/edunline.ttf)
 
+@keyframes scanline
+  0%
+    top -10px
+  100%
+    top 1200px
+
+@keyframes scanline-wobble
+  0%
+    opacity 0.04
+  100%
+    opacity 0.05
+
 @keyframes badscreen
   0%, 28%, 55%, 68%, 76.5%, 100%
     opacity 0
@@ -20,13 +32,34 @@ $disabled = lighten($red_txt, 10)
   76%
     opacity 0.7
 
-.badscreen
+.effects
   pointer-events none
+
+.badscreen, .scanline
   position fixed
-  top 0
   left 0
-  bottom 0
   right 0
+
+.scanline
+  top -10px
+  height 10px
+  background linear-gradient(top, black, white, black)
+  animation-name scanline
+  animation-iteration-count infinite
+  animation-duration 10s
+  animation-timing-function linear
+
+.scanline-wobble
+  opacity 0.1
+  animation-name scanline-wobble
+  animation-iteration-count infinite
+  animation-duration 0.4s
+  animation-direction alternate
+  animation-timing-function ease-in-out
+
+.badscreen
+  top 0
+  bottom 0
   background $back
   opacity 0
   animation-name badscreen
