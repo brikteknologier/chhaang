@@ -42,8 +42,6 @@ $disabled = lighten($red_txt, 10)
 
 .scanline
   top -10px
-  height 10px
-  background linear-gradient(top, black, white, black)
   animation-name scanline
   animation-iteration-count infinite
   animation-duration 10s
@@ -51,6 +49,8 @@ $disabled = lighten($red_txt, 10)
 
 .scanline-wobble
   opacity 0.1
+  height 10px
+  background linear-gradient(top, black, white, black)
   animation-name scanline-wobble
   animation-iteration-count infinite
   animation-duration 0.4s
