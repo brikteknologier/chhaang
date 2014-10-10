@@ -17,9 +17,17 @@ module.exports = function(app) {
   });
   
   controller.define('drpublishAuth', aptomaAuthHandler);
+
+  controller.define('secretPage', [ 'auth' ], function(req, res, next) {
+    app.kvass('/api/videos/mine', { headers: req.headers }, function(err, data) {
+      if (err) return next(err);
+      res.send(data);
+    });
+  });
   
   controller.get('/index', 'drpublishIndex');
   controller.get('/authenticate', 'drpublishAuth');
+  controller.get('/secret', 'secretPage');
 
   return controller;
 }

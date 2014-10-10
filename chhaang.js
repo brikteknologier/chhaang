@@ -38,11 +38,32 @@ readConfig(function(config) {
   });
 
   // authorization
-  var auth = require('./authorization')(app, config);
-  controller.use(auth.getUser);
-  controller.use('auth', auth.checkAuth);
+  require('./site_settings')(app);
+  function currentUser(req, res, next) {
+    app.kvass("/api/users/active", { headers: req.headers }, function(err, user) {
+      res.locals.currentUser = err ? null : user;
+      next();
+    });
+  }
 
+  function handleError(err, req, res, next) {
+    if (err && err.statusCode == 401) {
+      var url = '//' + req.headers.host + req.originalUrl;
+      app.log.info("Missing login for " + url);
+      var loginUrl = "/auth/login";
+      if (app.locals.siteSettings.has_site_password)
+        loginUrl = "/auth/anonymous-login";
+      return res.redirect(loginUrl + "?redirect=" + url);
+    } else {
+      res.send(err.statusCode || 500, err.message || err);
+    }
+  }
+
+  // routes
   require('./routes')(controller);
+
+  app.use(currentUser);
+  app.use(handleError);
 
   server.listen(config.port);
 });
