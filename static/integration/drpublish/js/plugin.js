@@ -31,9 +31,9 @@ $(document).ready(function() {
 
   $('#objectButton').click(function() {
     // insert an element at the current cursor position, adding required parameters to make it draggable and non-editable
-    height = this.APPSETTINGS.height;
-    width = this.APPSETTINGS.width;
-    background = this.APPSETTINGS.background;
+    height = window.APPSETTINGS.height;
+    width = window.APPSETTINGS.width;
+    background = window.APPSETTINGS.background;
     var element = $('<div style="width: ' + width + 'px; height: ' + height + 'px; background: ' + background + ';">');
     var videoFrame = $('<iframe width="' + width + '" height="' + height + '" src="http://johanna.brik.no/video/embed/e46ae1f3-023a-419b-a963-222c6222813c" frameborder="0"></iframe>');
     element.append(videoFrame);
