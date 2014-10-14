@@ -9,11 +9,11 @@ head
   script(src='js/aptoma/AppAPI.js')
   script(src='js/aptoma/AH5Communicator.js')
   script(src='js/aptoma/ArticleCommunicator.js')
-  script
+  script.
     // test only - these will be put in nice and pretty input boxes instead
-    this.APPSETTINGS.width = #{DrPublish.width}
-    this.APPSETTINGS.height = #{DrPublish.height}
-    this.APPSETTINGS.background = #{DrPublish.background}
+    window.APPSETTINGS.width = "#{DrPublish.width}"
+    window.APPSETTINGS.height = "#{DrPublish.height}"
+    window.APPSETTINGS.background = "#{DrPublish.background}"
   script(src='js/plugin.js')
 body
   h2#title Hello there.
