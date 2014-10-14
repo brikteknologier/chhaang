@@ -8,12 +8,10 @@ $(document).ready(function() {
   }
 
   var name = getParameterByName('appName');
-  var auth = getParameterByName('auth');
-  var iv = getParameterByName('iv');
   // register name of the app, sent as a paramter in the iframe url
   AppAPI.setAppName(name);
   // authenticate the app, again using variables sent in the iframe url
-  AppAPI.doStandardAuthentication("authenticate?auth=" + auth + "&iv=" + iv);
+  AppAPI.authenticated = true;
 
   function getValue() {
     return $('#textInput').val();
