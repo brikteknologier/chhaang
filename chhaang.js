@@ -18,7 +18,7 @@ readConfig(function(config) {
   server.on('request', app);
   _.extend(app.settings, config);
 
-  app.log = require('logginator')(config.log);
+  app.log = require('logginator')('chhaang', config.log);
   require('winston-tagged-http-logger')(server, app.log.createSublogger('http'));
   app.use(express.cookieParser());
 

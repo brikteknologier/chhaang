@@ -23,7 +23,7 @@
     "general-hammond": "^2.1.1",
     "imbibe": "^0.2.3",
     "jade": "^1.7.0",
-    "logginator": "^1.1.8",
+    "logginator": "^1.2.1",
     "nib": "^1.0.4",
     "node-aptoma-plugin-auth": "^1.1.0",
     "request": "^2.45.0",
