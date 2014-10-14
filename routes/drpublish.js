@@ -12,11 +12,15 @@ module.exports = function(app) {
   var controller = Controller();
   controller.app = app;
 
-  controller.define('drpublishIndex', function (req, res) {
+  controller.define('index', function (req, res) {
     res.render('drpublish/index', app.settings);
   });
   
-  controller.define('drpublishAuth', aptomaAuthHandler);
+  controller.define('plugin', function (req, res) {
+    res.render('drpublish/plugin', app.settings);
+  });
+  
+  controller.define('auth', aptomaAuthHandler);
 
   controller.define('secretPage', [ 'auth' ], function(req, res, next) {
     app.kvass('/api/videos/mine', { headers: req.headers }, function(err, data) {
@@ -25,8 +29,9 @@ module.exports = function(app) {
     });
   });
   
-  controller.get('/index', 'drpublishIndex');
-  controller.get('/authenticate', 'drpublishAuth');
+  controller.get('/index', 'index');
+  controller.get('/plugin', 'plugin');
+  controller.get('/authenticate', 'auth');
   controller.get('/secret', 'secretPage');
 
   return controller;

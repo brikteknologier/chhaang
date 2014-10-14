@@ -2,23 +2,12 @@ doctype html
 html(lang='en')
 head
   meta(charset='utf-8')
-  title #{title} DrPublish integration test
+  title #{title} DrPublish Plugin Loading...
   script(src='js/vendors/jquery.min.js')
   script(src='js/vendors/jquery.postmessage.js')
   script(src='js/aptoma/Listeners.js')
   script(src='js/aptoma/AppAPI.js')
   script(src='js/aptoma/AH5Communicator.js')
-  script(src='js/aptoma/ArticleCommunicator.js')
-  script
-    // test only - these will be put in nice and pretty input boxes instead
-    this.APPSETTINGS.width = #{DrPublish.width}
-    this.APPSETTINGS.height = #{DrPublish.height}
-    this.APPSETTINGS.background = #{DrPublish.background}
   script(src='js/index.js')
 body
-  h2#title Hello there.
-  p Type stuff here:
-  input#textInput(type='text')
-  input#textButton(type='button', value='Insert As Text')
-  input#objectButton(type='button', value='Insert Video')
-  a(href="secret") Test for Auth and stuff
+  h2#title Loading...
