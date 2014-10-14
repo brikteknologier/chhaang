@@ -17,7 +17,7 @@ $(document).ready(function() {
   // Go to plugin after auth success
   AppAPI.addListeners({
     appAuthenticated: function() {
-      window.location = './plugin?appName=' + app;
+      window.location = './plugin?appName=' + name;
     }
   });
 });
