@@ -16,7 +16,7 @@ $(document).ready(function() {
   AppAPI.doStandardAuthentication("authenticate?auth=" + auth + "&iv=" + iv);
   // Go to plugin after auth success
   AppAPI.addListeners({
-    afterLoaded: function() {
+    appAuthenticated: function() {
       window.location = './plugin';
     }
   });
