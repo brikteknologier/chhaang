@@ -1,0 +1,29 @@
+@import 'nib'
+
+$back = #000
+$text = #484
+
+body
+  background $back
+  color $text
+  font-family "Proxima Nova", proxima-nova
+
+.thumbnail
+  background lighten($back, 20)
+  color lighten($text, 20)
+  display inline-block
+  position relative
+  margin 5
+  width 100px
+  height 100px
+  img
+    width 100%
+  .title
+    position absolute
+    white-space nowrap
+    overflow hidden
+    text-overflow ellipsis
+    margin auto
+    left 3px
+    bottom 2px
+    right 3px

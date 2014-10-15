@@ -2,22 +2,26 @@ doctype html
 head
   meta(charset='utf-8')
   title #{title} DrPublish integration test
+  link(rel='stylesheet', href='/integration/stylesheets/drpublish/plugin.css')
   script(src='js/vendors/jquery.min.js')
   script(src='js/vendors/jquery.postmessage.js')
   script(src='js/aptoma/Listeners.js')
   script(src='js/aptoma/AppAPI.js')
   script(src='js/aptoma/AH5Communicator.js')
   script(src='js/aptoma/ArticleCommunicator.js')
-  script.
-    // test only - these will be put in nice and pretty input boxes instead
-    window.APPSETTINGS.width = "#{DrPublish.width}"
-    window.APPSETTINGS.height = "#{DrPublish.height}"
-    window.APPSETTINGS.background = "#{DrPublish.background}"
   script(src='js/plugin.js')
+
 body
-  h2#title Hello there.
-  p Type stuff here:
-  input#textInput(type='text')
-  input#textButton(type='button', value='Insert As Text')
-  input#objectButton(type='button', value='Insert Video')
-  a(href="secret") Test for Auth and stuff
+  h2#title PARTY HARD
+  .videoSelected(style='display: none;')
+    span Width
+    input#widthInput(type='number', value='#{DrPublish.width}')
+    span Height
+    input#heightInput(type='number', value='#{DrPublish.height}')
+    span Background
+    input#backgroundInput(type='text', value='#{DrPublish.background}')
+    a#insertButton(href='#') Insert
+    a#updateButton(href='#') Update
+    a#removeButton(href='#') Remove
+  input#searchInput(type='text', placeholder='title, tag, or description', value='onechapter')
+  div#searchResults
