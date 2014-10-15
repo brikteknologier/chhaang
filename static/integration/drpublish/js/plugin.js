@@ -7,25 +7,55 @@ $(document).ready(function() {
     return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
   }
 
-  var name = getParameterByName('appName');
   // register name of the app, sent as a paramter in the iframe url
+  var name = getParameterByName('appName');
   AppAPI.setAppName(name);
-  // authenticate the app, again using variables sent in the iframe url
+  // App already authenticated in index frame
   AppAPI.authenticated = true;
 
-  function getValue() {
-    return $('#textInput').val();
+  function staggerOnKeyUp(ms, fn) {
+    var timeout = null;
+    return function keyUp(evt) {
+      if (timeout) {
+        clearTimeout(timeout);
+        timeout = null;
+      }
+
+      if (evt.keyCode == 13) // Enter is shortcut
+        return fn();
+
+      timeout = setTimeout(function() {
+        timeout = null;
+        fn();
+      }, ms);
+    }
   }
 
-  $('#textButton').click(function() {
-    value = getValue();
-    if (value === null) {
-      AppAPI.showInfoMsg('I shall not insert an empty thing, that would just be silly');
-      return false;
+  function search() {
+    var query = $('#searchInput').val();
+    if (query == '') return;
+    var url = '/api/videos/search?q=' + encodeURIComponent(query) + '&limit=20&order_by=created';
+    $.getJSON(url, showSearchResults);
+  }
+
+  search();
+
+  function showSearchResults(videos) {
+    function createElement(video) {
+      console.log(video);
+      return $('<span>')
+        .addClass('thumbnail')
+        .append([
+          $('<img>').attr('src', video.poster),
+          $('<span>').addClass('title').html(video.title)
+        ])
+        .attr('title', video.title);
     }
-    // insert a string at the current cursor position
-    AppAPI.Editor.insertString(value);
-  });
+    $('#searchResults').html('');
+    $('#searchResults').append($.map(videos, createElement));
+  }
+
+  $('#searchInput').on('keyup', staggerOnKeyUp(2000, search));
 
   $('#objectButton').click(function() {
     // insert an element at the current cursor position, adding required parameters to make it draggable and non-editable
