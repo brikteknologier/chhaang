@@ -22,7 +22,7 @@ $(document).ready(function() {
       }
 
       if (evt.keyCode == 13) // Enter is shortcut
-        return fn();
+        return fn(true);
 
       timeout = setTimeout(function() {
         timeout = null;
@@ -31,8 +31,11 @@ $(document).ready(function() {
     }
   }
 
-  function search() {
+  var lastQuery = null;
+  function search(force) {
     var query = $('#searchInput').val();
+    if (!force && query == lastQuery) return;
+    lastQuery = query;
     var url = '/api/videos/?';
     if (query != '')
       url = '/api/videos/search?q=' + encodeURIComponent(query) + '&';
