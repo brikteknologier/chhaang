@@ -33,12 +33,12 @@ $(document).ready(function() {
 
   function search() {
     var query = $('#searchInput').val();
-    if (query == '') return;
-    var url = '/api/videos/search?q=' + encodeURIComponent(query) + '&limit=20&order_by=created';
+    var url = '/api/videos/?';
+    if (query != '')
+      url = '/api/videos/search?q=' + encodeURIComponent(query) + '&';
+    url += 'limit=20&order_by=created';
     $.getJSON(url, showSearchResults);
   }
-
-  search();
 
   function showSearchResults(videos) {
     function createElement(video) {
@@ -81,4 +81,6 @@ $(document).ready(function() {
       });
     }
   });
+
+  search();
 });
