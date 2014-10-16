@@ -12,7 +12,10 @@ head
   script(src='js/plugin.js')
 
 body
-  h2#title PARTY HARD
+  .searchRow
+    img(src='res/briklogo.png')
+    span.label search
+    input#searchInput(type='text', placeholder='title, tag, or description')
   .videoSelected(style='display: none;')
     span Width
     input#widthInput(type='number', value='#{DrPublish.width}')
@@ -23,8 +26,6 @@ body
     a#insertButton(href='#') Insert
     a#updateButton(href='#') Update
     a#removeButton(href='#') Remove
-  span Search:
-  input#searchInput(type='text', placeholder='title, tag, or description')
   div#searchResults
 
   script(type="text/javascript", src="//use.typekit.net/xds4wqv.js")
