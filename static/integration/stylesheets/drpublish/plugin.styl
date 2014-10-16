@@ -21,6 +21,7 @@ body
   color $grey
   padding 2px 5px 2px 5px
   position relative
+  border-bottom 1px solid $grey
   img
     position absolute
     top 6px
@@ -71,3 +72,30 @@ body
 
 .thumbnail:hover
     background lighten($green, 20)
+
+#videoSelected
+  padding 3px
+  background $green
+  position relative
+  .title
+    width 100%
+    font-size 30px
+    white-space nowrap
+    overflow hidden
+    text-overflow ellipsis
+    margin auto
+  .buttons
+    width 100px
+    input
+      width 100%
+      border 1px
+      font-size 14px
+    input
+      margin-bottom 10px
+  .video
+    background $grey
+    position absolute
+    left 106px
+    top 35px
+    right 2px
+    bottom 2px

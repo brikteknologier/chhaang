@@ -51,6 +51,9 @@ $(document).ready(function() {
 
   function clickThumbnail(video) {
     console.log("click", video);
+    $('#videoSelected').show();
+    var el = generateEmbedElement(video);
+    setEditedElement(el);
   }
 
   function showSearchResults(videos) {
@@ -70,20 +73,47 @@ $(document).ready(function() {
     }
     $('#searchResults').html('');
     $('#searchResults').append($.map(videos, createElement));
+    // DEBUG
+    clickThumbnail(videos[0]);
   }
 
-  var staggeredSearch = staggerSearch(2000, search);
-  $('#searchInput').on('keyup', staggeredSearch);
+  $('#searchInput').on('keyup', staggerSearch(2000, search));
 
-  $('#objectButton').click(function() {
-    // insert an element at the current cursor position, adding required parameters to make it draggable and non-editable
-    var height = window.APPSETTINGS.height;
-    var width = window.APPSETTINGS.width;
-    var background = window.APPSETTINGS.background;
-    var element = $('<div style="width: ' + width + 'px; height: ' + height + 'px; background: ' + background + ';">');
-    var videoFrame = $('<iframe width="' + width + '" height="' + height + '" src="http://johanna.brik.no/video/embed/e46ae1f3-023a-419b-a963-222c6222813c" frameborder="0"></iframe>');
+  function setEditedElement(element) {
+    console.log(element);
+    var width = $('#widthInput').val();
+    var height = $('#heightInput').val();
+    var background = $('#backgroundInput').val();
+    if (!/^#[0-9a-fA-F]{3,6}$/.test(background))
+      background = '#000';
+    element.children('iframe')
+      .attr('width', width)
+      .attr('height', height)
+      .attr('background', background);
+    element.attr('style',
+                 'width: ' + width + 'px; ' +
+                 'height: ' + height + 'px; ' +
+                 'background: ' + background + ';');
+    var videoContainer = $('#videoSelected .video');
+    videoContainer.html('').append(element);
+  }
+
+  function generateEmbedElement(video) {
+    var siteBase = /:\/\/([^\/]*)/.exec(window.location.href)[1];
+    var urlBase = 'http://' + siteBase;
+    
+    // Dummy width, height, background.  Will be set properly on setEditorPreview.
+    var element = $('<div style="width: 0px; height: 0px; background: #000;">');
+    var videoFrame = $('<iframe width="0" height="0" src="' + urlBase + '/video/embed/' + video.uuid + '" frameborder="0"></iframe>');
     element.append(videoFrame);
 
+    return element;
+  }
+
+  $('#insertButton').click(function() {
+    var elementHTML = $('#videoSelected .video').html();
+    var element = $(elementHTML);
+    console.log(elementHTML);
     AppAPI.Editor.insertElement(element);
   });
 

@@ -16,16 +16,19 @@ body
     img(src='res/briklogo.png')
     span.label search
     input#searchInput(type='text', placeholder='title, tag, or description')
-  .videoSelected(style='display: none;')
-    span Width
-    input#widthInput(type='number', value='#{DrPublish.width}')
-    span Height
-    input#heightInput(type='number', value='#{DrPublish.height}')
-    span Background
-    input#backgroundInput(type='text', value='#{DrPublish.background}')
-    a#insertButton(href='#') Insert
-    a#updateButton(href='#') Update
-    a#removeButton(href='#') Remove
+  div#videoSelected(style='display: none;')
+    .title Video Title
+    .buttons
+      .label Width
+      input#widthInput(type='number', value='#{DrPublish.width}')
+      .label Height
+      input#heightInput(type='number', value='#{DrPublish.height}')
+      .label Background
+      input#backgroundInput(type='text', value='#{DrPublish.background}')
+      a#insertButton(href='#') Insert
+      a#updateButton(href='#') Update
+      a#removeButton(href='#') Remove
+    .video
   div#searchResults
 
   script(type="text/javascript", src="//use.typekit.net/xds4wqv.js")
