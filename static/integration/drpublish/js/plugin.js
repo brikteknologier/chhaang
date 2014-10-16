@@ -49,7 +49,9 @@ $(document).ready(function() {
       return $('<span>')
         .addClass('thumbnail')
         .append([
-          $('<img>').attr('src', video.poster),
+          $('<div>').addClass('poster').append(
+            $('<img>').attr('src', video.poster)
+          ),
           $('<span>').addClass('title').html(video.title)
         ])
         .attr('title', video.title);
