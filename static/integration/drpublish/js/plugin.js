@@ -57,9 +57,6 @@ $(document).ready(function() {
 
   var staggeredSearch = staggerSearch(2000, search);
   $('#searchInput').on('keyup', staggeredSearch);
-  $('#searchButton').click(function() {
-    staggeredSearch({ keyCode: 13 });
-  });
 
   $('#objectButton').click(function() {
     // insert an element at the current cursor position, adding required parameters to make it draggable and non-editable
