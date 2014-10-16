@@ -49,7 +49,9 @@ $(document).ready(function() {
     });
   }
 
+  var videoSelected = false;
   function clickThumbnail(video) {
+    videoSelected = true;
     $('#videoSelected').show();
     var el = generateEmbedElement(video);
     setElementProps(
@@ -79,8 +81,9 @@ $(document).ready(function() {
     }
     $('#searchResults').html('');
     $('#searchResults').append($.map(videos, createElement));
-    // DEBUG
-    clickThumbnail(videos[0]);
+    
+    if (!videoSelected && videos[0])
+      clickThumbnail(videos[0]);
   }
 
   $('#searchInput').on('keyup', staggerSearch(2000, search));
