@@ -49,9 +49,12 @@ $(document).ready(function() {
     });
   }
 
+  function clickThumbnail(video) {
+    console.log("click", video);
+  }
+
   function showSearchResults(videos) {
-    function createElement(video) {
-      console.log(video);
+    function createElement(video, idx) {
       return $('<span>')
         .addClass('thumbnail')
         .append([
@@ -60,7 +63,10 @@ $(document).ready(function() {
           ),
           $('<span>').addClass('title').html(video.title)
         ])
-        .attr('title', video.title);
+        .attr('title', video.title)
+        .click(function() {
+          clickThumbnail(video);
+        });
     }
     $('#searchResults').html('');
     $('#searchResults').append($.map(videos, createElement));
