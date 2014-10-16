@@ -40,7 +40,13 @@ $(document).ready(function() {
     if (query != '')
       url = '/api/videos/search?q=' + encodeURIComponent(query) + '&';
     url += 'limit=20&order_by=created';
-    $.getJSON(url, showSearchResults);
+    $.getJSON(url, showSearchResults).fail(function(jqXHR, textStatus, error) {
+      if (jqXHR.status == 401) {
+        var loginUrl = "/auth/login";
+        var here = encodeURIComponent(window.location.href);
+        window.location.href = loginUrl + "?redirect=" + here;
+      }
+    });
   }
 
   function showSearchResults(videos) {
