@@ -13,7 +13,7 @@ $(document).ready(function() {
   // App already authenticated in index frame
   AppAPI.authenticated = true;
 
-  function staggerOnKeyUp(ms, fn) {
+  function staggerSearch(ms, fn) {
     var timeout = null;
     return function keyUp(evt) {
       if (timeout) {
@@ -55,7 +55,11 @@ $(document).ready(function() {
     $('#searchResults').append($.map(videos, createElement));
   }
 
-  $('#searchInput').on('keyup', staggerOnKeyUp(2000, search));
+  var staggeredSearch = staggerSearch(2000, search);
+  $('#searchInput').on('keyup', staggeredSearch);
+  $('#searchButton').click(function() {
+    staggeredSearch({ keyCode: 13 });
+  });
 
   $('#objectButton').click(function() {
     // insert an element at the current cursor position, adding required parameters to make it draggable and non-editable
