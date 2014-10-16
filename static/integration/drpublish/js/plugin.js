@@ -50,10 +50,16 @@ $(document).ready(function() {
   }
 
   function clickThumbnail(video) {
-    console.log("click", video);
     $('#videoSelected').show();
     var el = generateEmbedElement(video);
-    setEditedElement(el);
+    setElementProps(
+      el,
+      300,
+      169,
+      $('#backgroundInput').val()
+    );
+    var videoContainer = $('#videoSelected .video');
+    videoContainer.html('').append(el);
   }
 
   function showSearchResults(videos) {
@@ -79,11 +85,7 @@ $(document).ready(function() {
 
   $('#searchInput').on('keyup', staggerSearch(2000, search));
 
-  function setEditedElement(element) {
-    console.log(element);
-    var width = $('#widthInput').val();
-    var height = $('#heightInput').val();
-    var background = $('#backgroundInput').val();
+  function setElementProps(element, width, height, background) {
     if (!/^#[0-9a-fA-F]{3,6}$/.test(background))
       background = '#000';
     element.children('iframe')
@@ -94,8 +96,18 @@ $(document).ready(function() {
                  'width: ' + width + 'px; ' +
                  'height: ' + height + 'px; ' +
                  'background: ' + background + ';');
-    var videoContainer = $('#videoSelected .video');
-    videoContainer.html('').append(element);
+  }
+
+  function getInsertionElement() {
+    var elHtml = $('#videoSelected .video').html();
+    var el = $(elHtml);
+    setElementProps(
+      el,
+      $('#widthInput').val(),
+      $('#heightInput').val(),
+      $('#backgroundInput').val()
+    );
+    return el;
   }
 
   function generateEmbedElement(video) {
@@ -111,9 +123,7 @@ $(document).ready(function() {
   }
 
   $('#insertButton').click(function() {
-    var elementHTML = $('#videoSelected .video').html();
-    var element = $(elementHTML);
-    console.log(elementHTML);
+    var element = getInsertionElement();
     AppAPI.Editor.insertElement(element);
   });
 
