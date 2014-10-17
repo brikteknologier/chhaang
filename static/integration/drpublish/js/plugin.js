@@ -1,18 +1,23 @@
 this.DEBUG = true;
 $(document).ready(function() {
-  function getParameterByName(name) {
-    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
-    results = regex.exec(location.search);
-    return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+  var currentlyEditing = null;
+  var lastQuery = null;
+
+  function initApp() {
+    function getParameterByName(name) {
+      name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+      var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+      results = regex.exec(location.search);
+      return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+    }
+
+    // register name of the app, sent as a paramter in the iframe url
+    var name = getParameterByName('appName');
+    AppAPI.setAppName(name);
+    // App already authenticated in index frame
+    AppAPI.authenticated = true;
   }
-
-  // register name of the app, sent as a paramter in the iframe url
-  var name = getParameterByName('appName');
-  AppAPI.setAppName(name);
-  // App already authenticated in index frame
-  AppAPI.authenticated = true;
-
+    
   function staggerSearch(ms, fn) {
     var timeout = null;
     return function keyUp(evt) {
@@ -31,7 +36,6 @@ $(document).ready(function() {
     }
   }
 
-  var lastQuery = null;
   function search(force) {
     var query = $('#searchInput').val();
     if (!force && query == lastQuery) return;
@@ -125,10 +129,18 @@ $(document).ready(function() {
     return element;
   }
 
+  // --- init ---
+
   $('#insertButton').click(function() {
     var element = getInsertionElement();
     AppAPI.Editor.insertElement(element);
   });
+
+  $('#removeButton').click(function() {
+
+  });
+
+  initApp();
 
   AppAPI.addListeners({
     // triggers each time an element from this app is selected
