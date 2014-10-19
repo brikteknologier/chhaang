@@ -3,6 +3,7 @@ head
   meta(charset='utf-8')
   title #{title} DrPublish integration test
   link(rel='stylesheet', href='/integration/stylesheets/drpublish/plugin.css')
+  link(rel="stylesheet", href="/integration/res/font-awesome/css/font-awesome.min.css")
   script(src='js/vendors/jquery.min.js')
   script(src='js/vendors/jquery.postmessage.js')
   script(src='js/aptoma/Listeners.js')
@@ -17,6 +18,7 @@ body
     span.label search
     .searchInputSizer
       input#searchInput(type='text', placeholder='title, tag, or description')
+      .icon-search
   div#videoSelected(style='display: none;')
     .title Video Title
     .buttons
