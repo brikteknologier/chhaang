@@ -10,6 +10,8 @@ head
   script(src='js/aptoma/AppAPI.js')
   script(src='js/aptoma/AH5Communicator.js')
   script(src='js/aptoma/ArticleCommunicator.js')
+  script.
+    var STATIC_BACKGROUND = '#{DrPublish.background}';
   script(src='js/plugin.js')
 
 body
@@ -26,8 +28,6 @@ body
       input#widthInput(type='number', value='#{DrPublish.width}')
       .label Height
       input#heightInput(type='number', value='#{DrPublish.height}')
-      .label Background
-      input#backgroundInput(type='text', value='#{DrPublish.background}')
       a#insertButton(href='#') Insert
       a#removeButton(href='#') Remove
     .video

@@ -63,8 +63,7 @@ $(document).ready(function() {
     setElementProps(
       el,
       300,
-      169,
-      $('#backgroundInput').val()
+      169
     );
     var videoContainer = $('#videoSelected .video');
     $('#videoSelected .title').text(video.title);
@@ -95,17 +94,14 @@ $(document).ready(function() {
 
   $('#searchInput').on('keyup', staggerSearch(2000, search));
 
-  function setElementProps(element, width, height, background) {
-    if (!/^#[0-9a-fA-F]{3,6}$/.test(background))
-      background = '#000';
+  function setElementProps(element, width, height) {
     element.children('iframe')
       .attr('width', width)
-      .attr('height', height)
-      .attr('background', background);
+      .attr('height', height);
     element.attr('style',
                  'width: ' + width + 'px; ' +
                  'height: ' + height + 'px; ' +
-                 'background: ' + background + ';');
+                 'background: ' + STATIC_BACKGROUND + ';');
   }
 
   function getInsertionElement() {
@@ -114,8 +110,7 @@ $(document).ready(function() {
     setElementProps(
       el,
       $('#widthInput').val(),
-      $('#heightInput').val(),
-      $('#backgroundInput').val()
+      $('#heightInput').val()
     );
     return el;
   }
@@ -124,8 +119,8 @@ $(document).ready(function() {
     var siteBase = /:\/\/([^\/]*)/.exec(window.location.href)[1];
     var urlBase = 'http://' + siteBase;
     
-    // Dummy width, height, background.  Will be set properly on setEditorPreview.
-    var element = $('<div style="width: 0px; height: 0px; background: #000;">');
+    // Dummy width, height.  Will be set properly on setEditorPreview.
+    var element = $('<div style="width: 0px; height: 0px;">');
     var videoFrame = $('<iframe width="0" height="0" src="' + urlBase + '/video/embed/' + video.uuid + '" frameborder="0"></iframe>');
     element.append(videoFrame);
 
