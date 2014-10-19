@@ -54,7 +54,9 @@ $(document).ready(function() {
   }
 
   var videoSelected = false;
-  function clickThumbnail(video) {
+  function clickThumbnail(video, element) {
+    $('.thumbnail').removeClass('selected');
+    $(element).addClass('selected');
     videoSelected = true;
     $('#videoSelected').show();
     var el = generateEmbedElement(video);
@@ -65,12 +67,13 @@ $(document).ready(function() {
       $('#backgroundInput').val()
     );
     var videoContainer = $('#videoSelected .video');
+    $('#videoSelected .title').text(video.title);
     videoContainer.html('').append(el);
   }
 
   function showSearchResults(videos) {
     function createElement(video, idx) {
-      return $('<span>')
+      var thumbnailElement = $('<span>')
         .addClass('thumbnail')
         .append([
           $('<div>').addClass('poster').append(
@@ -79,15 +82,15 @@ $(document).ready(function() {
           $('<span>').addClass('title').html(video.title)
         ])
         .attr('title', video.title)
-        .click(function() {
-          clickThumbnail(video);
+        .click(function(evt) {
+          clickThumbnail(video, evt.currentTarget);
         });
+      if (!videoSelected)
+        thumbnailElement.click();
+      return thumbnailElement;
     }
     $('#searchResults').html('');
     $('#searchResults').append($.map(videos, createElement));
-    
-    if (!videoSelected && videos[0])
-      clickThumbnail(videos[0]);
   }
 
   $('#searchInput').on('keyup', staggerSearch(2000, search));
