@@ -160,14 +160,5 @@ $(document).ready(function() {
 
   initApp();
 
-  AppAPI.addListeners({
-    // triggers each time an element from this app is selected
-    pluginElementSelected: function(data) {
-      AppAPI.Editor.getHTMLById(data.id, function(element) {
-        $('#title').html('Last selected element: ' + $(element).text());
-      });
-    }
-  });
-
   search();
 });
