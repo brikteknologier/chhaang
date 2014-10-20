@@ -2,7 +2,7 @@ this.DEBUG = true;
 $(document).ready(function() {
   var currentlyEditing = null;
   var lastQuery = null;
-  var searchLimit = 20;
+  var searchLimit = 21;
   var searchSkip = 0;
   var videoSelected = false;
 
