@@ -1,3 +1,4 @@
 node_modules/
 go
-*.css
+static/integration/stylesheets/chhaang.css
+static/integration/stylesheets/drpublish/plugin.css
