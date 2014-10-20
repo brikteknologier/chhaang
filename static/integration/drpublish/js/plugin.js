@@ -100,7 +100,7 @@ $(document).ready(function() {
     if (searchSkip) {
       var prevPageElement = $('<span>')
         .addClass('paginationButton')
-        .text('Previous');
+        .text('previous page');
       prevPageElement.click(prevPage);
       sr.append(prevPageElement);
     }
@@ -110,7 +110,7 @@ $(document).ready(function() {
     if (videos.length >= searchLimit) {
       var nextPageElement = $('<span>')
         .addClass('paginationButton')
-        .text('Next');
+        .text('next page');
       nextPageElement.click(nextPage);
       sr.append(nextPageElement);
     }
