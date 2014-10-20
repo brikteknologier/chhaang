@@ -2,6 +2,8 @@ this.DEBUG = true;
 $(document).ready(function() {
   var currentlyEditing = null;
   var lastQuery = null;
+  var searchLimit = 20;
+  var searchSkip = 0;
 
   function initApp() {
     function getParameterByName(name) {
@@ -26,8 +28,10 @@ $(document).ready(function() {
         timeout = null;
       }
 
-      if (evt.keyCode == 13) // Enter is shortcut
+      if (evt.keyCode == 13) { // Enter is shortcut
+        searchSkip = 0;
         return fn(true);
+      }
 
       timeout = setTimeout(function() {
         timeout = null;
@@ -39,11 +43,13 @@ $(document).ready(function() {
   function search(force) {
     var query = $('#searchInput').val();
     if (!force && query == lastQuery) return;
+    if (query != lastQuery)
+      searchSkip = 0;
     lastQuery = query;
     var url = '/api/videos/?';
     if (query != '')
       url = '/api/videos/search?q=' + encodeURIComponent(query) + '&';
-    url += 'limit=20&order_by=created';
+    url += 'limit=' + searchLimit + '&order_by=created&skip=' + searchSkip;
     $.getJSON(url, showSearchResults).fail(function(jqXHR, textStatus, error) {
       if (jqXHR.status == 401) {
         var loginUrl = "/auth/login";
@@ -88,11 +94,27 @@ $(document).ready(function() {
         thumbnailElement.click();
       return thumbnailElement;
     }
-    $('#searchResults').html('');
-    $('#searchResults').append($.map(videos, createElement));
+    var sr = $('#searchResults');
+    sr.html('');
+    sr.append($.map(videos, createElement));
+
+    if (videos.length >= searchLimit) {
+      var nextPageElement = $('<span>')
+        .addClass('nextPageButton')
+        .text('More...');
+      nextPageElement.click(nextPage);
+      sr.append(nextPageElement);
+    }
+
+    if (!videos.length) {
+      sr.text('No matching videos found.');
+    }
   }
 
-  $('#searchInput').on('keyup', staggerSearch(2000, search));
+  function nextPage() {
+    searchSkip += searchLimit;
+    search(true);
+  }
 
   function setElementProps(element, width, height) {
     element.children('iframe')
@@ -129,13 +151,11 @@ $(document).ready(function() {
 
   // --- init ---
 
+  $('#searchInput').on('keyup', staggerSearch(2000, search));
+
   $('#insertButton').click(function() {
     var element = getInsertionElement();
     AppAPI.Editor.insertElement(element);
-  });
-
-  $('#removeButton').click(function() {
-
   });
 
   initApp();
