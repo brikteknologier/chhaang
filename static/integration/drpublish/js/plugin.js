@@ -96,23 +96,39 @@ $(document).ready(function() {
     }
     var sr = $('#searchResults');
     sr.html('');
+
+    if (searchSkip) {
+      var prevPageElement = $('<span>')
+        .addClass('paginationButton')
+        .text('Previous page');
+      prevPageElement.click(prevPage);
+      sr.append(prevPageElement);
+    }
+
     sr.append($.map(videos, createElement));
 
     if (videos.length >= searchLimit) {
       var nextPageElement = $('<span>')
-        .addClass('nextPageButton')
-        .text('More...');
+        .addClass('paginationButton')
+        .text('Next page');
       nextPageElement.click(nextPage);
       sr.append(nextPageElement);
     }
 
-    if (!videos.length) {
+    if (!videos.length && !searchSkip) {
       sr.text('No matching videos found.');
     }
   }
 
   function nextPage() {
     searchSkip += searchLimit;
+    search(true);
+  }
+
+  function prevPage() {
+    searchSkip -= searchLimit;
+    if (searchSkip < 0)
+      searchSkip = 0;
     search(true);
   }
 
