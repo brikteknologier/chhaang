@@ -4,6 +4,7 @@ $(document).ready(function() {
   var lastQuery = null;
   var searchLimit = 20;
   var searchSkip = 0;
+  var videoSelected = false;
 
   function initApp() {
     function getParameterByName(name) {
@@ -59,7 +60,6 @@ $(document).ready(function() {
     });
   }
 
-  var videoSelected = false;
   function clickThumbnail(video, element) {
     $('.thumbnail').removeClass('selected');
     $(element).addClass('selected');
