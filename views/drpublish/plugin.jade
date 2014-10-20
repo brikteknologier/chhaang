@@ -28,7 +28,9 @@ body
       input#widthInput(type='number', value='#{DrPublish.width}')
       .label Height
       input#heightInput(type='number', value='#{DrPublish.height}')
-      a#insertButton(href='#') Insert
+      a#insertButton(href='#')
+        .icon.icon-circle-arrow-left
+        | Insert
     .video
   div#searchResults
 
