@@ -22,7 +22,12 @@ body
       input#searchInput(type='text', placeholder='title, tag, or description')
       .icon-search
   div#videoSelected(style='display: none;')
-    .title Video Title
+    .title (Untitled)
+    .author (No Author)
+    .age (Unknown Age)
+    .duration 0:00
+    .tags (no tags)
+    .description (No Description)
     .buttons
       .label Width
       input#widthInput(type='number', value='#{DrPublish.width}')
