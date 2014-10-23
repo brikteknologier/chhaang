@@ -73,7 +73,8 @@ $(document).ready(function() {
     );
     var videoContainer = $('#videoSelected .video');
     $('#videoSelected .title').text(video.title);
-    $('#videoSelected .tags').text($.map(video.tags, function(x){return x.tag}).join(', '));
+    if (video.tags)
+      $('#videoSelected .tags').text($.map(video.tags, function(x){return x.tag}).join(', '));
     $('#videoSelected .author').text(video.author.name);
     $('#videoSelected .age').text(video.prettyAge);
     $('#videoSelected .duration').text(video.prettyDuration);
