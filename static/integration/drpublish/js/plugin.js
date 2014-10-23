@@ -72,13 +72,13 @@ $(document).ready(function() {
       169
     );
     var videoContainer = $('#videoSelected .video');
-    $('#videoSelected .title').text(video.title);
-    if (video.tags)
-      $('#videoSelected .tags').text($.map(video.tags, function(x){return x.tag}).join(', '));
-    $('#videoSelected .author').text(video.author.name);
-    $('#videoSelected .age').text(video.prettyAge);
-    $('#videoSelected .duration').text(video.prettyDuration);
-    $('#videoSelected .description').text(video.desc);
+    var collectedTags = $.map(video.tags || [], function(x){return x.tag}).join(', ');
+    $('#videoSelected .title').text(video.title || '(untitled)');
+    $('#videoSelected .tags').text(collectedTags || '(no tags)');
+    $('#videoSelected .author').text(video.author.name || '(no author)');
+    $('#videoSelected .age').text(video.prettyAge || '(unknown age)');
+    $('#videoSelected .duration').text(video.prettyDuration || '--:--');
+    $('#videoSelected .description').text(video.desc || '(no description)');
     videoContainer.html('').append(el);
   }
 
