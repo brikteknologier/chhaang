@@ -50,7 +50,7 @@ $(document).ready(function() {
     var url = '/api/videos/?';
     if (query != '')
       url = '/api/videos/search?q=' + encodeURIComponent(query) + '&';
-    url += 'limit=' + searchLimit + '&order_by=created&skip=' + searchSkip;
+    url += 'limit=' + searchLimit + '&order_by=created&order_dir=desc&skip=' + searchSkip;
     $.getJSON(url, showSearchResults).fail(function(jqXHR, textStatus, error) {
       if (jqXHR.status == 401) {
         var loginUrl = "/auth/login";
