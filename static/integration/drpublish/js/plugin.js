@@ -160,7 +160,7 @@ $(document).ready(function() {
 
   function generateEmbedElement(video) {
     var siteBase = /:\/\/([^\/]*)/.exec(window.location.href)[1];
-    var urlBase = 'http://' + siteBase;
+    var urlBase = '//' + siteBase;
     
     // Dummy width, height.  Will be set properly on setEditorPreview.
     var element = $('<div style="width: 0px; height: 0px;">');
