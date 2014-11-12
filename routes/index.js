@@ -15,4 +15,13 @@ module.exports = function(controller) {
       res.send(404, 'DrPublish integration not enabled.');
     });
   }
+
+  if (app.settings.Feide) {
+    var feideController = require('./feide')(app);
+    app.use('/integration/feide/', feideController);
+  } else {
+    app.get('/integration/feide*', function(req, res) {
+      res.send(404, 'Feide integration not enabled');
+    });
+  }
 }
