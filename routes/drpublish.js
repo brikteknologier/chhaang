@@ -8,16 +8,16 @@ var aptomaAuthHandler = require('node-aptoma-plugin-auth')(
   }
 );
 
-module.exports = function(app) {
+module.exports = function(settings) {
   var controller = Controller();
-  controller.app = app;
+  controller.app.set('view engine', 'jade');
 
   controller.define('index', function (req, res) {
-    res.render('drpublish/index', app.settings);
+    res.render('drpublish/index', settings);
   });
   
   controller.define('plugin', function (req, res) {
-    res.render('drpublish/plugin', app.settings);
+    res.render('drpublish/plugin', settings);
   });
   
   controller.define('auth', aptomaAuthHandler);

@@ -1,11 +1,11 @@
 var Controller = require('controller');
 
-module.exports = function(app) {
+module.exports = function(settings) {
   var controller = Controller();
-  controller.app = app;
+  controller.app.set('view engine', 'jade');
 
   controller.define('index', function (req, res) {
-    res.render('feide/index', app.settings);
+    res.render('feide/index', settings);
   });
   
   controller.get('/index', 'index');
