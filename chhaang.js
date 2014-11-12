@@ -16,7 +16,8 @@ readConfig(function(config) {
   var app = controller.app;
   app.kvass = imbibe(config.kvass);
   server.on('request', app);
-  _.extend(app.settings, config);
+
+  _.extend(app.settings, { title: 'BRIK' }, config);
 
   app.log = require('logginator')('chhaang', config.log);
   require('winston-tagged-http-logger')(server, app.log.createSublogger('http'));
@@ -30,12 +31,6 @@ readConfig(function(config) {
     }
   }));
   app.use(express.static(__dirname + "/static"));
-
-  // jade
-  app.set('view engine', 'jade');
-  app.locals({ 
-    title: config.title || 'BRIK'
-  });
 
   // authorization
   require('./site_settings')(app);
