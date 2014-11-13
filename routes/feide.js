@@ -21,7 +21,14 @@ module.exports = function(settings) {
   });
 
   controller.define('profile', function (req, res) {
-    res.send('NOT IMPLEMENTED profile');
+    if (req.isAuthenticated()) {
+      res.render("feide/profile", {
+        user: req.user,
+        jason: JSON.stringify(req.user)
+      });
+    } else {
+      res.redirect("../login");
+    }
   });
 
   controller.get('/index', 'index');
