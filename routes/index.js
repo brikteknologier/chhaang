@@ -16,7 +16,7 @@ module.exports = function(controller) {
       res.send(404, 'DrPublish integration not enabled.');
     });
   }
-  
+
   if (app.settings.Feide) {
     var feideController = require('./feide')(app.settings);
     app.use('/integration/feide/', feideController);

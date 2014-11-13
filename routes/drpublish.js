@@ -15,11 +15,11 @@ module.exports = function(settings) {
   controller.define('index', function (req, res) {
     res.render('drpublish/index', settings);
   });
-  
+
   controller.define('plugin', function (req, res) {
     res.render('drpublish/plugin', settings);
   });
-  
+
   controller.define('auth', aptomaAuthHandler);
 
   controller.define('secretPage', [ 'auth' ], function(req, res, next) {
@@ -28,7 +28,7 @@ module.exports = function(settings) {
       res.send(data);
     });
   });
-  
+
   controller.get('/index', 'index');
   controller.get('/plugin', 'plugin');
   controller.get('/authenticate', 'auth');

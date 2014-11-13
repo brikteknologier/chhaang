@@ -7,7 +7,7 @@ module.exports = function(settings) {
   controller.define('index', function (req, res) {
     res.render('feide/index', settings);
   });
-  
+
   controller.get('/index', 'index');
 
   return controller;

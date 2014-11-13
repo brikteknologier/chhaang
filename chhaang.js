@@ -24,7 +24,7 @@ readConfig(function(config) {
   app.log = require('logginator')('chhaang', config.log);
   require('winston-tagged-http-logger')(server, app.log.createSublogger('http'));
   app.use(express.cookieParser());
-  
+
   // passport & session
   var strategy = new SamlStrategy({
     callbackUrl: 'https://feidetest.brik.no/integration/feide/login/callback',
