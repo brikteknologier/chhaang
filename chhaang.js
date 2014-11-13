@@ -6,6 +6,8 @@ var imbibe = require('imbibe');
 var stylus = require('stylus');
 var _ = require('underscore');
 var nib = require('nib')();
+var passport = require('passport');
+var SamlStrategy = require('passport-saml').Strategy;
 
 var configKeys = [ 'port', 'kvass' ];
 var readConfig = require('general-hammond')('chhaang', configKeys);
@@ -22,6 +24,27 @@ readConfig(function(config) {
   app.log = require('logginator')('chhaang', config.log);
   require('winston-tagged-http-logger')(server, app.log.createSublogger('http'));
   app.use(express.cookieParser());
+  
+  // passport & session
+  var strategy = new SamlStrategy({
+    callbackUrl: 'https://feidetest.brik.no/integration/feide/login/callback',
+    entryPoint : 'https://openidp.feide.no/simplesaml/saml2/idp/SSOService.php',
+    issuer : 'brik-dummy-sp'
+  }, function(profile, next) {
+    return next(null,
+                {
+                  id : profile.uid,
+                  email : profile.email,
+                  displayName : profile.cn,
+                  firstName : profile.givenName,
+                  lastName : profile.sn
+                });
+  });
+  passport.serializeUser(function(user, next) { next(null, user); });
+  passport.deserializeUser(function(user, next) { next(null, user); });
+  app.use(express.session({ secret: 'sudo apt-get install pants' }));
+  app.use(passport.initialize());
+  app.use(passport.session());
 
   // stylus
   app.use(stylus.middleware({
