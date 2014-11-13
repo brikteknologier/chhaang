@@ -17,7 +17,9 @@ module.exports = function(settings) {
   });
 
   controller.define('logout', function (req, res) {
-    res.send('NOT IMPLEMENTED logout');
+    // TODO: Send session invalidation request to Feide IP instead
+    req.logout();
+    res.redirect('/');
   });
 
   controller.define('profile', function (req, res) {
