@@ -1,4 +1,4 @@
-module.exports = function(controller) {
+module.exports = function(controller, passport) {
   var app = controller.app;
   controller.app.set('view engine', 'jade');
 
@@ -18,7 +18,7 @@ module.exports = function(controller) {
   }
 
   if (app.settings.Feide) {
-    var feideController = require('./feide')(app.settings);
+    var feideController = require('./feide')(app.settings, passport);
     app.use('/integration/feide/', feideController);
   } else {
     app.get('/integration/feide*', function(req, res) {

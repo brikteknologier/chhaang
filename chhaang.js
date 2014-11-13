@@ -31,17 +31,19 @@ readConfig(function(config) {
     entryPoint : 'https://openidp.feide.no/simplesaml/saml2/idp/SSOService.php',
     issuer : 'brik-dummy-sp'
   }, function(profile, next) {
-    return next(null,
-                {
-                  id : profile.uid,
-                  email : profile.email,
-                  displayName : profile.cn,
-                  firstName : profile.givenName,
-                  lastName : profile.sn
-                });
+    next(null, {
+      id : profile.uid,
+      email : profile.email,
+      displayName : profile.cn,
+      firstName : profile.givenName,
+      lastName : profile.sn
+    });
   });
   passport.serializeUser(function(user, next) { next(null, user); });
   passport.deserializeUser(function(user, next) { next(null, user); });
+  passport.use(strategy);
+  app.use(express.cookieParser());
+  app.use(express.bodyParser());
   app.use(express.session({ secret: 'sudo apt-get install pants' }));
   app.use(passport.initialize());
   app.use(passport.session());
@@ -78,7 +80,7 @@ readConfig(function(config) {
   }
 
   // routes
-  require('./routes')(controller);
+  require('./routes')(controller, passport);
 
   app.use(currentUser);
   app.use(handleError);

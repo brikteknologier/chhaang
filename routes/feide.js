@@ -1,6 +1,6 @@
 var Controller = require('controller');
 
-module.exports = function(settings) {
+module.exports = function(settings, passport) {
   var controller = Controller();
   controller.app.set('view engine', 'jade');
 
@@ -9,7 +9,10 @@ module.exports = function(settings) {
   });
 
   controller.define('login', function (req, res) {
-    res.send('NOT IMPLEMENTED login');
+    passport.authenticate('saml', {
+      successRedirect : "/",
+      failureRedirect : "/integration/feide/login",
+    });
   });
 
   controller.define('login/callback', function (req, res) {
