@@ -25,7 +25,7 @@
     "jade": "^1.7.0",
     "logginator": "^1.2.1",
     "nib": "^1.0.4",
-    "node-aptoma-plugin-auth": "^1.1.0",
+    "node-aptoma-plugin-auth": "^1.2.0",
     "passport": "^0.2.1",
     "passport-saml": "^0.5.3",
     "request": "^2.45.0",
