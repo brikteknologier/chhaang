@@ -17,9 +17,15 @@ node chhaang --config <config.json>
   or a stoutmeal config object. see the stoutmeal docs for more info
 * `DrPublish` (optional) - a DrPublish plugin config object. if omitted,
   a DrPublish plugin will not be provided.
+* `Feide` (optional) - a Feide SAML endpoint config object.  If omitted,
+  no Feide SAML endpoint will be available.
 
 ## DrPublish configuration
 
 * `width` (optional, default 600) - default width of embedded videos
 * `height` (optional, default 338) - default height of embedded videos
 * `background` (optional, default #000) - background color of embedded videos
+
+## Feide configuration
+
+No configuration yet.
