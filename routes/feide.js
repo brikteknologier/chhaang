@@ -8,16 +8,17 @@ module.exports = function(settings, passport) {
     res.render('feide/index', settings);
   });
 
-  controller.define('login', function (req, res) {
-    passport.authenticate('saml', {
-      successRedirect : "/",
-      failureRedirect : "/integration/feide/login",
-    })(req, res);
-  });
-
-  controller.define('login/callback', function (req, res) {
-    res.send('NOT IMPLEMENTED login/callback');
-  });
+  controller.define('login', passport.authenticate('saml', {
+    successRedirect : "/",
+    failureRedirect : "/integration/feide/login"
+  }));
+  
+  controller.define('login/callback', passport.authenticate('saml', {
+    failureRedirect : "/integration/feide/login",
+    failureFlash: true
+  }, function onSuccess(req, res) {
+    res.redirect("/");
+  }));
 
   controller.define('logout', function (req, res) {
     // TODO: Send session invalidation request to Feide IP instead
