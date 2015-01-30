@@ -12,7 +12,7 @@ module.exports = function(settings, passport) {
     passport.authenticate('saml', {
       successRedirect : "/",
       failureRedirect : "/integration/feide/login",
-    });
+    })(req, res);
   });
 
   controller.define('login/callback', function (req, res) {
