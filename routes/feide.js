@@ -13,12 +13,15 @@ module.exports = function(settings, passport) {
     failureRedirect : "/integration/feide/login"
   }));
   
-  controller.define('login/callback', passport.authenticate('saml', {
-    failureRedirect : "/integration/feide/login",
-    failureFlash: true
-  }, function onSuccess(req, res) {
-    res.redirect("/");
-  }));
+  var passportAuthCallback = passport.authenticate('saml', {
+      failureRedirect : "/integration/feide/login",
+      failureFlash: true
+  });
+  controller.define('loginCallback', function(req, res, next) {
+      passportAuthCallback(req, res, function() {
+	  res.redirect("/integration/feide/index");
+      });
+  });
 
   controller.define('logout', function (req, res) {
     // TODO: Send session invalidation request to Feide IP instead
@@ -39,7 +42,7 @@ module.exports = function(settings, passport) {
 
   controller.get('/index', 'index');
   controller.get('/login', 'login');
-  controller.get('/login/callback', 'login/callback');
+  controller.post('/login/callback', 'loginCallback');
   controller.get('/logout', 'logout');
   controller.get('/profile', 'profile');
 
