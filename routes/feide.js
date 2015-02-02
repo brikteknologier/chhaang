@@ -18,7 +18,7 @@ module.exports = function(settings, passport) {
     failureFlash: true
   });
   controller.define('loginCallback', function(req, res, next) {
-    passportAuthCallback(req, res, function onAuthCallbackSucceess() {
+    passportAuthCallback(req, res, function onAuthCallbackSuccess() {
       res.redirect("/integration/feide/index");
     });
   });
