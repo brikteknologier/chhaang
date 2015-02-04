@@ -9,7 +9,7 @@ var nib = require('nib')();
 var passport = require('passport');
 var SamlStrategy = require('passport-saml').Strategy;
 
-var configKeys = [ 'port', 'kvass' ];
+var configKeys = [ 'port', 'kvass', 'stoutmeal' ];
 var readConfig = require('general-hammond')('chhaang', configKeys);
 var server = module.exports = http.createServer();
 
