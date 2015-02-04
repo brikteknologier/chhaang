@@ -22,6 +22,7 @@ module.exports = function(app, passport) {
   });
   controller.define('loginCallback', function(req, res) {
     passportAuthCallback(req, res, function onAuthCallbackSuccess() {
+      log.info('Feide login succeeded at callback: ' + req.user && JSON.stringify(req.user));
       res.redirect("/integration/feide/index");
     });
   });
