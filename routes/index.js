@@ -18,7 +18,7 @@ module.exports = function(controller, passport) {
   }
 
   if (app.settings.Feide) {
-    var feideController = require('./feide')(app.settings, passport);
+    var feideController = require('./feide')(app, passport);
     app.use('/integration/feide/', feideController);
   } else {
     app.get('/integration/feide*', function(req, res) {

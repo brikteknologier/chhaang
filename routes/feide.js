@@ -1,6 +1,9 @@
 var Controller = require('controller');
 
-module.exports = function(settings, passport) {
+module.exports = function(app, passport) {
+  var settings = app.settings;
+  var log = app.log;
+
   var controller = Controller();
   controller.app.set('view engine', 'jade');
 
