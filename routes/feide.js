@@ -20,7 +20,7 @@ module.exports = function(app, passport) {
     failureRedirect: "/integration/feide/login",
     failureFlash: true
   });
-  controller.define('loginCallback', function(req, res, next) {
+  controller.define('loginCallback', function(req, res) {
     passportAuthCallback(req, res, function onAuthCallbackSuccess() {
       res.redirect("/integration/feide/index");
     });
