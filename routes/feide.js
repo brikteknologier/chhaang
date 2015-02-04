@@ -1,9 +1,13 @@
 var Controller = require('controller');
+var stoutmeal = require('stoutmeal');
+var stoutmealDefaults = require('stoutmeal/config');
 
 module.exports = function(app, passport) {
   var settings = app.settings;
   var log = app.log;
-
+  
+  var sm = stoutmeal(stoutmealDefaults(settings.stoutmeal));
+  
   var controller = Controller();
   controller.app.set('view engine', 'jade');
 

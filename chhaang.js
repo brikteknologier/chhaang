@@ -20,6 +20,7 @@ readConfig(function(config) {
   server.on('request', app);
 
   _.extend(app.settings, { title: 'BRIK' }, config);
+  app.settings.stoutmeal = config.stoutmeal;
 
   app.log = require('logginator')('chhaang', config.log);
   require('winston-tagged-http-logger')(server, app.log.createSublogger('http'));
