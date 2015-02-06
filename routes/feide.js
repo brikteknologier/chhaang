@@ -3,18 +3,17 @@ var stoutmeal = require('stoutmeal');
 var stoutmealDefaults = require('stoutmeal/config');
 
 module.exports = function(app, passport) {
-  var settings = app.settings;
   var log = app.log;
 
   var User = app.db.models.user;
   
-  var sm = stoutmeal(stoutmealDefaults(settings.stoutmeal));
+  var sm = stoutmeal(stoutmealDefaults(app.config.stoutmeal));
   
   var controller = Controller();
   controller.app.set('view engine', 'jade');
 
   controller.define('index', function(req, res) {
-    res.render('feide/index', settings);
+    res.render('feide/index', app.settings);
   });
 
   controller.define('login', passport.authenticate('saml', {
