@@ -5,6 +5,8 @@ var stoutmealDefaults = require('stoutmeal/config');
 module.exports = function(app, passport) {
   var settings = app.settings;
   var log = app.log;
+
+  var User = app.db.models.user;
   
   var sm = stoutmeal(stoutmealDefaults(settings.stoutmeal));
   
@@ -25,9 +27,42 @@ module.exports = function(app, passport) {
     failureFlash: true
   });
   controller.define('loginCallback', function(req, res) {
+    function locallyAuthenticateFeideUser(idpUser) {
+      app.log.info('Feide auth login callback success: ' + JSON.stringify(idpUser));
+      // `eduPersonTargetedID` is available in an organization's Feide system.
+      // `id` is available in Feide OpenIdP.
+      var idpId = idpUser.eduPersonTargetedID || idpUser.id;
+      var translatedUser = {
+        // `displayName` is the user's preferred display name, but not always available
+        // `givenName` and `sn` are first and last names, but not always available
+        name: idpUser.displayName || idpUser.givenName + " " + idpUser.sn || idpId,
+        // `mail` is available in an organization's Feide system
+        // `email` is available in Feide OpenIdp.
+        email: idpUser.mail || idpUser.email || ''
+      };
+      User.createOrUpdateFromIdentityProvider('feide', idpId, translatedUser, function(err, user) {
+        app.log.info("User #" + user.id + " updated or created locally.");
+        if (err) {
+          app.log.error("Error creating or updating Feide user '" + idpId + "': " + JSON.stringify(err));
+          return res.send(500, err);
+        }
+        sm.auth.createAuthEntry(user.id, function(err, authKey) {
+          sm.cookie.set(res, authKey);
+          res.redirect("/integration/feide/index");
+        });
+      });
+    }
+
     passportAuthCallback(req, res, function onAuthCallbackSuccess() {
-      log.info('Feide login succeeded at callback: ' + req.user && JSON.stringify(req.user));
-      res.redirect("/integration/feide/index");
+      if (!req.user)
+        return; // passport.authenticate for SAML gives multiple callbacks, some without data.
+      // passport.authenticate for SAML also swallows exceptions
+      try {
+        locallyAuthenticateFeideUser(req.user);
+      } catch (e) {
+        app.log.error(e);
+        res.send(500, "error handling authentication");
+      }
     });
   });
 

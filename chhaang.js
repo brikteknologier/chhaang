@@ -8,14 +8,17 @@ var _ = require('underscore');
 var nib = require('nib')();
 var passport = require('passport');
 var SamlStrategy = require('passport-saml').Strategy;
+var seraphInit = require('seraph');
+var barleyInit = require('barley');
 
-var configKeys = [ 'port', 'kvass', 'stoutmeal' ];
+var configKeys = [ 'port', 'kvass', 'stoutmeal', 'neo4j' ];
 var readConfig = require('general-hammond')('chhaang', configKeys);
 var server = module.exports = http.createServer();
 
 readConfig(function(config) {
   var controller = Controller();
   var app = controller.app;
+
   app.kvass = imbibe(config.kvass);
   server.on('request', app);
 
@@ -80,11 +83,24 @@ readConfig(function(config) {
     }
   }
 
-  // routes
-  require('./routes')(controller, passport);
+  var seraph = seraphInit(config.neo4j);
+  barleyInit(seraph, {}, function(err, models) {
+    if (err) {
+      app.log.error("failed to initiale models. error follows");
+      app.log.error(err.message);
+      app.log.error(err);
+      process.exit(1);
+    }
+    app.db = seraph;
+    app.db.models = models;
 
-  app.use(currentUser);
-  app.use(handleError);
+    // routes
+    require('./routes')(controller, passport);
 
-  server.listen(config.port);
+    app.use(currentUser);
+    app.use(handleError);
+
+    // start
+    server.listen(config.port);
+  });
 });
