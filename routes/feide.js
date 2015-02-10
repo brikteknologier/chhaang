@@ -58,7 +58,7 @@ module.exports = function(app, passport) {
           return res.send(500, err);
         }
         sm.auth.createAuthEntry(user.id, function(err, authKey) {
-          sm.cookie.set(res, authKey);
+          sm.cookie.set(res, user, authKey);
           var redirectTo = req.cookies[REDIRECT_COOKIE] || '/';
           res.clearCookie(REDIRECT_COOKIE);
           res.redirect(redirectTo);
