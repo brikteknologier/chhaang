@@ -1,9 +1,11 @@
 var Controller = require('controller');
 var stoutmeal = require('stoutmeal');
 var stoutmealDefaults = require('stoutmeal/config');
+var url = require('url');
 
 module.exports = function(app, passport) {
   var log = app.log;
+  var REDIRECT_COOKIE = 'redirectAfterLogin';
 
   var User = app.db.models.user;
   
@@ -16,10 +18,20 @@ module.exports = function(app, passport) {
     res.render('feide/index', app.settings);
   });
 
-  controller.define('login', passport.authenticate('saml', {
+  var passportAuth = passport.authenticate('saml', {
     successRedirect: "/",
-    failureRedirect: "/integration/feide/login"
-  }));
+    failureRedirect: "/integration/feide/login",
+  });
+  controller.define('login', function(req, res) {
+    var reqUrl = url.parse(req.url, true);
+    var redirect = reqUrl.query['redirect'];
+    res.cookie(
+      REDIRECT_COOKIE,
+      redirect || '/',
+      { maxAge: 60 * 60 * 1000 }
+    );
+    passportAuth(req, res);
+  });
   
   var passportAuthCallback = passport.authenticate('saml', {
     failureRedirect: "/integration/feide/login",
@@ -47,7 +59,9 @@ module.exports = function(app, passport) {
         }
         sm.auth.createAuthEntry(user.id, function(err, authKey) {
           sm.cookie.set(res, authKey);
-          res.redirect("/integration/feide/index");
+          var redirectTo = req.cookies[REDIRECT_COOKIE] || '/';
+          res.clearCookie(REDIRECT_COOKIE);
+          res.redirect(redirectTo);
         });
       });
     }
