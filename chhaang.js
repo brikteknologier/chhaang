@@ -32,8 +32,10 @@ readConfig(function(config) {
   // passport & session
   var strategy = new SamlStrategy({
     callbackUrl: 'https://feidetest.brik.no/integration/feide/login/callback',
-    entryPoint : 'https://openidp.feide.no/simplesaml/saml2/idp/SSOService.php',
-    issuer : 'brik-dummy-sp'
+    entryPoint: 'https://openidp.feide.no/simplesaml/saml2/idp/SSOService.php',
+    logoutUrl: 'https://openidp.feide.no/simplesaml/saml2/idp/SingleLogoutService.php',
+    identifierFormat: 'urn:oasis:names:tc:SAML:2.0:nameid-format:transient',
+    issuer: 'brik-dummy-sp'
   }, function(profile, next) {
     next(null, {
       id : profile.uid,
