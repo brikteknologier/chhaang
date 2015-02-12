@@ -6,6 +6,7 @@ var url = require('url');
 module.exports = function(app, passport) {
   var log = app.log;
   var REDIRECT_COOKIE = 'redirectAfterLogin';
+  var defaultRedirect = '/';
 
   var User = app.db.models.user;
   
@@ -18,10 +19,36 @@ module.exports = function(app, passport) {
     res.render('feide/index', app.settings);
   });
 
+  function invalidateAuthKey(req, res) {
+    var authKey = sm.cookie.get(req);
+    if (authKey) {
+      sm.auth.invalidateAuthKey(authKey, function(err) {
+        if (err) {
+          app.log.error("Could not invalidate user's auth key");
+          app.log.error(err);
+        } else {
+          app.log.info('invalidated authKey ' + authKey);
+        }
+        logoutCompleted(res);
+      });
+    } else {
+      logoutCompleted(res);
+    }
+  }
+
+  function logoutCompleted(res) {
+    res.redirect(defaultRedirect);
+  }
+
   var passportAuth = passport.authenticate('saml', {
-    successRedirect: "/",
     failureRedirect: "/integration/feide/login",
+    failureFlash: true
   });
+
+  var passportAuthLogout = passport.authenticate('saml', {
+    samlFallback: "logout-request"
+  });
+
   controller.define('login', function(req, res) {
     var reqUrl = url.parse(req.url, true);
     var redirect = reqUrl.query['redirect'];
@@ -33,10 +60,6 @@ module.exports = function(app, passport) {
     passportAuth(req, res);
   });
   
-  var passportAuthCallback = passport.authenticate('saml', {
-    failureRedirect: "/integration/feide/login",
-    failureFlash: true
-  });
   controller.define('loginCallback', function(req, res) {
     function locallyAuthenticateFeideUser(idpUser) {
       app.log.info('Feide auth login callback success: ' + JSON.stringify(idpUser));
@@ -66,7 +89,7 @@ module.exports = function(app, passport) {
       });
     }
 
-    passportAuthCallback(req, res, function onAuthCallbackSuccess() {
+    passportAuth(req, res, function onAuthCallbackSuccess() {
       if (!req.user)
         return; // passport.authenticate for SAML gives multiple callbacks, some without data.
       // passport.authenticate for SAML also swallows exceptions
@@ -80,10 +103,19 @@ module.exports = function(app, passport) {
   });
 
   controller.define('logout', function(req, res) {
-    // TODO: Send session invalidation request to Feide IP instead
-    req.logout();
-    res.redirect('/');
+    if (!req.user) // Not logged in via Feide, just invalidate authKey if present
+      return invalidateAuthKey(req, res);
+
+    req.user.nameID = req.user.id;
+    req.user.nameIDFormat = "urn:oasis:names:tc:SAML:2.0:nameid-format:transient";
+
+    passportAuthLogout(req, res, function onLogoutDone() {
+      app.log.info('SAML logout processed');
+      res.redirect('/');
+    });
   });
+
+  controller.define('logoutCallback', invalidateAuthKey);
 
   controller.define('profile', function(req, res) {
     if (req.isAuthenticated()) {
@@ -100,6 +132,7 @@ module.exports = function(app, passport) {
   controller.get('/login', 'login');
   controller.post('/login/callback', 'loginCallback');
   controller.get('/logout', 'logout');
+  controller.get('/logout/callback', 'logoutCallback');
   controller.get('/profile', 'profile');
 
   return controller;
