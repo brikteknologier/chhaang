@@ -6,6 +6,6 @@ h1 Profile
 
 dl
   dt Display name
-  dd #{user.displayName}
+  dd #{user.displayName || user.cn}
   dt Email
-  dd #{user.email}
+  dd #{user.email || user.mail}

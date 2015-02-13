@@ -64,12 +64,16 @@ module.exports = function(app, passport) {
     function locallyAuthenticateFeideUser(idpUser) {
       app.log.info('Feide auth login callback success: ' + JSON.stringify(idpUser));
       // `eduPersonTargetedID` is available in an organization's Feide system.
-      // `id` is available in Feide OpenIdP.
-      var idpId = idpUser.eduPersonTargetedID || idpUser.id;
+      // `uid` is available in Feide OpenIdP.
+      var idpId = idpUser.eduPersonTargetedID || idpUser.uid;
       var translatedUser = {
         // `displayName` is the user's preferred display name, but not always available
         // `givenName` and `sn` are first and last names, but not always available
-        name: idpUser.displayName || idpUser.givenName + " " + idpUser.sn || idpId,
+        // `cn` is the user's local username, but not always available
+        name: idpUser.displayName
+          || idpUser.givenName + " " + idpUser.sn
+          || idpUser.cn
+          || idpId,
         // `mail` is available in an organization's Feide system
         // `email` is available in Feide OpenIdp.
         email: idpUser.mail || idpUser.email || ''
@@ -105,9 +109,6 @@ module.exports = function(app, passport) {
   controller.define('logout', function(req, res) {
     if (!req.user) // Not logged in via Feide, just invalidate authKey if present
       return invalidateAuthKey(req, res);
-
-    req.user.nameID = req.user.id;
-    req.user.nameIDFormat = "urn:oasis:names:tc:SAML:2.0:nameid-format:transient";
 
     passportAuthLogout(req, res, function onLogoutDone() {
       app.log.info('SAML logout processed');

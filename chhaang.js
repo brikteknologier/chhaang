@@ -36,15 +36,7 @@ readConfig(function(config) {
     logoutUrl: 'https://openidp.feide.no/simplesaml/saml2/idp/SingleLogoutService.php',
     identifierFormat: 'urn:oasis:names:tc:SAML:2.0:nameid-format:transient',
     issuer: 'brik-dummy-sp'
-  }, function(profile, next) {
-    next(null, {
-      id : profile.uid,
-      email : profile.email,
-      displayName : profile.cn,
-      firstName : profile.givenName,
-      lastName : profile.sn
-    });
-  });
+  }, function(profile, next) { next(null, profile); });
   passport.serializeUser(function(user, next) { next(null, user); });
   passport.deserializeUser(function(user, next) { next(null, user); });
   passport.use(strategy);
