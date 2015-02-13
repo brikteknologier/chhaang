@@ -129,7 +129,7 @@ module.exports = function(app, passport) {
     }
   });
 
-  controller.get('/index', 'index');
+  controller.get('/', 'index');
   controller.get('/login', 'login');
   controller.post('/login/callback', 'loginCallback');
   controller.get('/logout', 'logout');
