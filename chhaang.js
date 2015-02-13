@@ -30,13 +30,9 @@ readConfig(function(config) {
   app.use(express.cookieParser());
 
   // passport & session
-  var strategy = new SamlStrategy({
-    callbackUrl: 'https://feidetest.brik.no/integration/feide/login/callback',
-    entryPoint: 'https://openidp.feide.no/simplesaml/saml2/idp/SSOService.php',
-    logoutUrl: 'https://openidp.feide.no/simplesaml/saml2/idp/SingleLogoutService.php',
-    identifierFormat: 'urn:oasis:names:tc:SAML:2.0:nameid-format:transient',
-    issuer: 'brik-dummy-sp'
-  }, function(profile, next) { next(null, profile); });
+  var strategy = new SamlStrategy(
+    config.Feide.saml,
+    function(profile, next) { next(null, profile); });
   passport.serializeUser(function(user, next) { next(null, user); });
   passport.deserializeUser(function(user, next) { next(null, user); });
   passport.use(strategy);

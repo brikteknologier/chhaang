@@ -28,4 +28,10 @@ node chhaang --config <config.json>
 
 ## Feide configuration
 
-No configuration yet.
+* `saml` - SAML metadata config object
+
+### SAML metadata config object
+
+* `entryPoint` - Single Sign On URL.  Example: "https://openidp.feide.no/simplesaml/saml2/idp/SSOService.php"
+* `logoutUrl` - Single Sing Out URL.  Example: "https://openidp.feide.no/simplesaml/saml2/idp/SingleLogoutService.php"
+* `issuer` - The identity of this BRIK instance when registered as a service provider.  Example: "brik-dummy-sp"
