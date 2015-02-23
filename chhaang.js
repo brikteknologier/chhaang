@@ -10,6 +10,7 @@ var passport = require('passport');
 var SamlStrategy = require('passport-saml').Strategy;
 var seraphInit = require('seraph');
 var barleyInit = require('barley');
+var package = require('./package.json');
 
 var configKeys = [ 'port', 'kvass', 'stoutmeal', 'neo4j' ];
 var readConfig = require('general-hammond')('chhaang', configKeys);
@@ -25,6 +26,7 @@ readConfig(function(config) {
   _.extend(app.settings, { title: 'BRIK' }, config);
   app.config = config;
 
+  process.title = (config.id || "anonymous") + "-chhaang-" + package.version;
   app.log = require('logginator')('chhaang', config.log);
   require('winston-tagged-http-logger')(server, app.log.createSublogger('http'));
   app.use(express.cookieParser());
