@@ -30,12 +30,14 @@ readConfig(function(config) {
   app.use(express.cookieParser());
 
   // passport & session
-  var strategy = new SamlStrategy(
-    config.Feide.saml,
-    function(profile, next) { next(null, profile); });
-  passport.serializeUser(function(user, next) { next(null, user); });
-  passport.deserializeUser(function(user, next) { next(null, user); });
-  passport.use(strategy);
+  if (config.Feide) {
+    var strategy = new SamlStrategy(
+      config.Feide.saml,
+      function(profile, next) { next(null, profile); });
+    passport.serializeUser(function(user, next) { next(null, user); });
+    passport.deserializeUser(function(user, next) { next(null, user); });
+    passport.use(strategy);
+  }
   app.use(express.cookieParser());
   app.use(express.bodyParser());
   app.use(express.session({ secret: 'sudo apt-get install pants' }));
