@@ -47,9 +47,7 @@ $(document).ready(function() {
     if (query != lastQuery)
       searchSkip = 0;
     lastQuery = query;
-    var url = '/api/videos/?';
-    if (query != '')
-      url = '/api/videos/search?q=' + encodeURIComponent(query) + '&';
+    var url = '/integration/drpublish/search?q=' + encodeURIComponent(query) + '&';
     url += 'limit=' + searchLimit + '&order_by=created&order_dir=desc&skip=' + searchSkip;
     $.getJSON(url, showSearchResults).fail(function(jqXHR, textStatus, error) {
       if (jqXHR.status == 401) {
