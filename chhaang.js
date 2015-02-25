@@ -64,23 +64,6 @@ readConfig(function(config) {
     });
   }
 
-  function handleLoginRequired(req, res) {
-      var url = '//' + req.headers.host + req.originalUrl;
-      app.log.info("Missing login for " + url);
-      var loginUrl = "/auth/login";
-      if (app.locals.siteSettings.has_site_password)
-        loginUrl = "/auth/anonymous-login";
-      return res.redirect(loginUrl + "?redirect=" + url);
-  }
-
-  function handleError(err, req, res, next) {
-    if (err && err.statusCode == 401) {
-      handleLoginRequired(req, res);
-    } else {
-      res.send(err.statusCode || 500, err.message || err);
-    }
-  }
-
   var seraph = seraphInit(config.neo4j);
   barleyInit(seraph, {}, function(err, models) {
     if (err) {
@@ -96,7 +79,6 @@ readConfig(function(config) {
     require('./routes')(controller, passport);
 
     app.use(currentUser);
-    app.use(handleError);
 
     // start
     server.listen(config.port);
