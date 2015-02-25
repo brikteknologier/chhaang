@@ -22,17 +22,9 @@ module.exports = function(settings) {
 
   controller.define('auth', aptomaAuthHandler);
 
-  controller.define('secretPage', [ 'auth' ], function(req, res, next) {
-    app.kvass('/api/videos/mine', { headers: req.headers }, function(err, data) {
-      if (err) return next(err);
-      res.send(data);
-    });
-  });
-
   controller.get('/index', 'index');
   controller.get('/plugin', 'plugin');
   controller.get('/authenticate', 'auth');
-  controller.get('/secret', 'secretPage');
 
   return controller;
 }
