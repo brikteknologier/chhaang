@@ -8,7 +8,8 @@ var aptomaAuthHandler = require('node-aptoma-plugin-auth')(
   }
 );
 
-module.exports = function(settings) {
+module.exports = function(app) {
+  var settings = app.settings;
   var controller = Controller();
   controller.app.set('view engine', 'jade');
 

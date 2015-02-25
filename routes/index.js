@@ -9,7 +9,7 @@ module.exports = function(controller, passport) {
   controller.get('/integration', 'overview');
 
   if (app.settings.DrPublish) {
-    var drPubController = require('./drpublish')(app.settings);
+    var drPubController = require('./drpublish')(app);
     app.use('/integration/drpublish/', drPubController);
   } else {
     app.get('/integration/drpublish*', function(req, res) {
