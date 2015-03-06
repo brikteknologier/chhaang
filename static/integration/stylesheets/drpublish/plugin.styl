@@ -63,42 +63,54 @@ body
   padding 1px
   color $white
 
-.paginationButton, .thumbnail
-  background $green
+.paginationButton, .result-element
   cursor pointer
   vertical-align top
   color $black
 
+.result-element
+  color $black
+  margin 2px
+  height 116px
+  overflow hidden
+  .poster
+    float left
+    overflow hidden
+    width 150px
+    img
+      width 100%
+    margin-right 2px
+  .by-uploaded
+    .label
+      margin-right 5px
+    position relative
+    .age
+      position absolute
+      right 5px
+    margin-bottom 2px
+  .title
+    font-weight bold
+    white-space nowrap
+    overflow hidden
+    text-overflow ellipsis
+    margin auto
+
+.result-element.selected
+  background darken($white, 10)
+
+.result-element:hover
+    background darken($white, 20)
+
 .paginationButton
+  background $grey
+  color $white
   text-align center
   display block
   padding 5px
   margin 2px
 
-.thumbnail
-  margin 2px
-  display inline-block
-  width 156px
-  height 120px
-  position relative
-  .poster
-    overflow hidden
-    height 100px
-    img
-      width 100%
-      float left
-  .title
-    position absolute
-    white-space nowrap
-    overflow hidden
-    text-overflow ellipsis
-    margin auto
-    left 4px
-    bottom 4px
-    right 4px
-
-.thumbnail:hover, .paginationButton:hover
-    background lighten($green, 20)
+.paginationButton:hover
+  background lighten($grey, 20)
 
 .thumbnail.selected
   margin 0
@@ -106,7 +118,7 @@ body
 
 #videoSelected
   padding 3px
-  background darken($white, 20)
+  background darken($white, 10)
   position relative
   margin-bottom 1px
   *

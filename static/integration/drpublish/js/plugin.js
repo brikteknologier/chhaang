@@ -59,7 +59,7 @@ $(document).ready(function() {
   }
 
   function clickThumbnail(video, element) {
-    $('.thumbnail').removeClass('selected');
+    $('.result-element').removeClass('selected');
     $(element).addClass('selected');
     videoSelected = true;
     $('#videoSelected').show();
@@ -77,11 +77,10 @@ $(document).ready(function() {
 
   function showSearchResults(videos) {
     function createElement(video, idx) {
-      console.log(video);
-      var element = $('<span>')
+      var element = $('<div>')
         .addClass('result-element')
         .append([
-          $('<div>').addClass('poster').append(
+          $('<span>').addClass('poster').append(
             $('<img>').attr('src', video.poster)
           ),
           $('<div>').addClass('title').html(video.title),
@@ -92,7 +91,7 @@ $(document).ready(function() {
           ]),
           $('<div>').addClass('description').html(video.desc)
         ])
-        .attr('title', video.title)
+        .attr('title', "Publisert i " + video.area.name)
         .click(function(evt) {
           clickThumbnail(video, evt.currentTarget);
         });
