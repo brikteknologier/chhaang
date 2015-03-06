@@ -72,31 +72,33 @@ $(document).ready(function() {
     var videoContainer = $('#videoSelected .video');
     var collectedTags = $.map(video.tags || [], function(x){return x.tag}).join(', ');
     $('#videoSelected .title').text(video.title || '(untitled)');
-    $('#videoSelected .tags').text(collectedTags || '(no tags)');
-    $('#videoSelected .author').text(video.author.name || '(no author)');
-    $('#videoSelected .age').text(video.prettyAge || '(unknown age)');
-    $('#videoSelected .duration').text(video.prettyDuration || '--:--');
-    $('#videoSelected .description').text(video.desc || '(no description)');
     videoContainer.html('').append(el);
   }
 
   function showSearchResults(videos) {
     function createElement(video, idx) {
-      var thumbnailElement = $('<span>')
-        .addClass('thumbnail')
+      console.log(video);
+      var element = $('<span>')
+        .addClass('result-element')
         .append([
           $('<div>').addClass('poster').append(
             $('<img>').attr('src', video.poster)
           ),
-          $('<span>').addClass('title').html(video.title)
+          $('<div>').addClass('title').html(video.title),
+          $('<div>').addClass('by-uploaded').append([
+            $('<span>').addClass('label').html('Av:'),
+            $('<span>').addClass('author').html(video.author.name),
+            $('<span>').addClass('age').html(video.prettyAge)
+          ]),
+          $('<div>').addClass('description').html(video.desc)
         ])
         .attr('title', video.title)
         .click(function(evt) {
           clickThumbnail(video, evt.currentTarget);
         });
       if (!videoSelected)
-        thumbnailElement.click();
-      return thumbnailElement;
+        element.click();
+      return element;
     }
     var sr = $('#searchResults');
     sr.html('');
