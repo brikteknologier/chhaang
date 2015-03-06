@@ -35,7 +35,11 @@ module.exports = function(app) {
       app.log.info('querying kvass at ' + searchUrl);
       
       app.kvass(searchUrl, { headers: req.headers }, function(err, data) {
-        if (err) return next(err);
+        if (err) {
+          if (err.statusCode < 400)
+            return res.status(err.statusCode).send(err.statusCode);
+          return next(err);
+        }
         res.setHeader('content-type', 'application/json');
         res.send(data);
       });
