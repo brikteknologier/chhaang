@@ -24,19 +24,14 @@ body
   div#videoSelected(style='display: none;')
     .title (Untitled)
     .video
-    .author (No Author)
-    .age (Unknown Age)
-    .duration --:--
-    .tags (no tags)
-    .description (No Description)
     .buttons
-      .label Width
-      input#widthInput(type='number', value='#{DrPublish.width}')
-      .label Height
-      input#heightInput(type='number', value='#{DrPublish.height}')
       a#insertButton(href='#')
         .icon.icon-circle-arrow-left
-        | Insert
+        | Bruk video
+      span.label Bredde / Høyde:
+      input#widthInput(type='number', value='#{DrPublish.width}')
+      span.label /
+      input#heightInput(type='number', value='#{DrPublish.height}')
   div#searchResults
 
   script(type="text/javascript", src="//use.typekit.net/xds4wqv.js")
