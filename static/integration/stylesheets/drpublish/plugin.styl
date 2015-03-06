@@ -10,7 +10,6 @@ global-reset()
 body
   margin 0
   padding 0
-  background $grey
   font-family "Proxima Nova", proxima-nova
 
 .searchRow
@@ -18,20 +17,24 @@ body
   font-size 24px
   font-weight bold
   background $white
-  color $grey
-  padding 2px 5px 2px 5px
   position relative
-  border-bottom 1px solid $grey
   img
     position absolute
     top 6px
     right 0
   .label
+    color $grey
     position absolute
     right 75px
     top 6px
     font-size 20px
     line-height initial
+  .icon-search
+    color $white
+    background $green
+    padding 5px
+    text-align center
+    font-size 25px
   .searchInputSizer
     position absolute
     margin 0
@@ -40,19 +43,10 @@ body
     right 187px
     bottom 0
     overflow hidden
-    border-left 1px solid $grey
-    border-right 1px solid $grey
-    .icon-search
-      opacity 0.3
-      position absolute
-      right 3px
-      top 2px
-      z-index 2
-      text-align center
-      mouse-events none
-      user-select none
-      font-size 28px
+    min-width 100px
+    border 1px solid $grey
     input
+      z-index 1
       border 0
       width 100%
       padding-left 3px
