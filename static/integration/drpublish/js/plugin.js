@@ -29,7 +29,7 @@ $(document).ready(function() {
         timeout = null;
       }
 
-      if (evt.keyCode == 13) { // Enter is shortcut
+      if (evt.keyCode == 13) { // Enter is shortcut to clear pagination and bypass stagger
         searchSkip = 0;
         return fn(true);
       }
