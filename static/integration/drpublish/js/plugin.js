@@ -16,9 +16,9 @@ $(document).ready(function() {
 
     // register name of the app, sent as a paramter in the iframe url
     var name = getParameterByName('appName');
-    AppAPI.setAppName(name);
+    PluginAPI.setAppName(name);
     // App already authenticated in index frame
-    AppAPI.authenticated = true;
+    PluginAPI.authenticated = true;
   }
     
   function staggerSearch(ms, fn) {
@@ -170,6 +170,28 @@ $(document).ready(function() {
     return element;
   }
 
+  function disableInsertion() {
+    $('#insertButton')
+      .addClass('disabled')
+      .attr('title', 'Click a valid insert position in editor first.');
+  }
+
+  function enableInsertion() {
+    $('#insertButton')
+      .removeClass('disabled')
+      .attr('title', '');
+  }
+
+  function checkEditorType() {
+    PluginAPI.Editor.getEditorType(function(type) {
+      if (type == null || type == 'text') {
+        disableInsertion();
+      } else {
+        enableInsertion();
+      }
+    });
+  }
+
   // --- init ---
 
   var staggeredSearch = staggerSearch(2000, search);
@@ -178,11 +200,17 @@ $(document).ready(function() {
   $('#searchIcon').on('click', function() { staggeredSearch({keyCode: 13}); });
 
   $('#insertButton').click(function() {
+    if ($('#insertButton').hasClass('disabled'))
+      return;
     var element = getInsertionElement();
-    AppAPI.Editor.insertElement(element);
+    PluginAPI.Editor.insertElement(element);
   });
 
   initApp();
 
+  PluginAPI.on('editorFocus', checkEditorType);
+  PluginAPI.on('editorsLostFocus', disableInsertion);
+
+  checkEditorType();
   search();
 });

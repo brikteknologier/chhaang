@@ -11,13 +11,12 @@ $(document).ready(function() {
   var auth = getParameterByName('auth');
   var iv = getParameterByName('iv');
   // register name of the app, sent as a paramter in the iframe url
-  AppAPI.setAppName(name);
+  PluginAPI.setAppName(name);
   // authenticate the app, again using variables sent in the iframe url
-  AppAPI.doStandardAuthentication("authenticate?auth=" + auth + "&iv=" + iv);
+  PluginAPI.doStandardAuthentication("authenticate?auth=" + auth + "&iv=" + iv);
   // Go to plugin after auth success
-  AppAPI.addListeners({
-    appAuthenticated: function() {
-      window.location = './plugin?appName=' + name;
-    }
-  });
+  PluginAPI.on(
+    'appAuthenticated',
+    function() { window.location = './plugin?appName=' + name; }
+  );
 });

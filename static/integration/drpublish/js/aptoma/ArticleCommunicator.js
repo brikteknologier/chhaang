@@ -1,20 +1,29 @@
-/* global AppAPI: true */
-/**
- * This class is used for communicating with the article, typically setting and getting values of metadata or in the article content itself.
- *
- * @class
- * @classdesc Functions for talking with the DrPublish article object. Accessed through AppAPI.Article
- */
-var ArticleCommunicator = {
+/* global PluginAPI: true */
+
+/* jshint maxstatements:44 */
+
+PluginAPI.Article = (function() {
+    "use strict";
+
+    /**
+     * This class is used for communicating with the article, typically setting and getting values of metadata or in the article content itself.
+     *
+     * @class
+     * @classdesc Functions for talking with the DrPublish article object. Accessed through PluginAPI.Article
+     * @exports PluginAPI/Article
+     */
+    var ArticleCommunicator = function() {
+        this.DEBUG = false;
+    };
 
     /**
      * Give focus to yourself
      *
      * @param {Function} callback function(Boolean), called as the app gets focus
      */
-    focusApp: function(callback) {
-        AppAPI.request("app-focus", {}, callback);
-    },
+    ArticleCommunicator.prototype.focusApp = function(callback) {
+        PluginAPI.request("app-focus", {}, callback);
+    };
     /**
      * Start the given app
      *
@@ -22,50 +31,76 @@ var ArticleCommunicator = {
      * @param {Object} options Options for initializing the app
      * @param {Function} callback function(Boolean), called after app is started
      */
-    startApp: function(name, options, callback) {
-        AppAPI.request("app-start", {
+    ArticleCommunicator.prototype.startApp = function(name, options, callback) {
+        PluginAPI.request("app-start", {
             app: name,
             option: options
         }, callback);
-    },
+    };
 
     /**
      * Stop the given app
      *
      * @param {String} name Name of the app from settings.php
      */
-    stopApp: function(name) {
-        AppAPI.request("app-stop", {
+    ArticleCommunicator.prototype.stopApp = function(name) {
+        PluginAPI.request("app-stop", {
             app: name
         });
-    },
+    };
 
     /**
      * Get the id of the article currently edited
      *
      * @param {Function} callback function(Int), id of the current article
      */
-    getId: function(callback) {
-        AppAPI.request('article-id-get', null, callback);
-    },
+    ArticleCommunicator.prototype.getId = function(callback) {
+        PluginAPI.request('article-id-get', null, callback);
+    };
 
     /**
      * Clear the meta information summary
      *
      * @param {Function} callback function(Boolean), called when meta data has been cleared
      */
-    clearMetaInfo: function(callback) {
-        AppAPI.request("article-metainfo-clear", null, callback);
-    },
+    ArticleCommunicator.prototype.clearMetaInfo = function(callback) {
+        PluginAPI.request("article-metainfo-clear", null, callback);
+    };
 
     /**
      * Get tags used in the article
      *
      * @param {Function} callback function([Object Tag]), array with tags connected to an article
      */
-    getTags: function(callback) {
-        AppAPI.request("article-tags-get", null, callback);
-    },
+    ArticleCommunicator.prototype.getTags = function(callback) {
+        PluginAPI.request("article-tags-get", null, callback);
+    };
+
+    /**
+     * Retrieve custom meta value for the article
+     *
+     * @param {String} name Name of the custom meta value
+     * @param {Function} callback function(Object), the parameter is an object containing the given custom meta value
+     */
+    ArticleCommunicator.prototype.getCustomMeta = function(name, callback) {
+        PluginAPI.request('article-custom-meta-get', {
+            name: name
+        }, callback);
+    };
+
+    /**
+     * Set custom meta value for the article
+     *
+     * @param {String} name Name of the meta value
+     * @param {Object} value Value to set
+     * @param {Function} callback function()
+     */
+    ArticleCommunicator.prototype.setCustomMeta = function(name, value, callback) {
+        PluginAPI.request('article-custom-meta-set', {
+            name: name,
+            value: value
+        }, callback);
+    };
 
     /**
      * Set tags for the article
@@ -74,12 +109,12 @@ var ArticleCommunicator = {
      * @param {Boolean} save Set to true to force save once the tags are updated
      * @param {Function} callback function(Boolean), called when tags have been set
      */
-    setTags: function(tags, save, callback) {
-        AppAPI.request('article-tags-set', {
+    ArticleCommunicator.prototype.setTags = function(tags, save, callback) {
+        PluginAPI.request('article-tags-set', {
             save: save,
             tags: tags
         }, callback);
-    },
+    };
 
     /**
      * Add tag for the article
@@ -88,12 +123,12 @@ var ArticleCommunicator = {
      * @param {Function} errorFunction called if error
      * @param {Function} callback function(Boolean), called when tag has been set
      */
-    addTag: function(tag, errorFunction, callback) {
-        AppAPI.request('article-tags-add', {
+    ArticleCommunicator.prototype.addTag = function(tag, errorFunction, callback) {
+        PluginAPI.request('article-tags-add', {
             tag: tag,
             onError: errorFunction
         }, callback);
-    },
+    };
 
     /**
      * Remove tag from article
@@ -101,31 +136,31 @@ var ArticleCommunicator = {
      * @param {String} tag Tag to remove
      * @param {Function} callback function(Boolean), called when tag has been removed
      */
-    removeTag: function(tag, callback) {
-        AppAPI.request('article-tags-remove', {
+    ArticleCommunicator.prototype.removeTag = function(tag, callback) {
+        PluginAPI.request('article-tags-remove', {
             tag: tag
         }, callback);
-    },
+    };
 
     /**
      * Get the selected categories
      *
      * @param {Function} callback function([String]), array with category ids
      */
-    getSelectedCategories: function(callback) {
-        AppAPI.request('article-categories-selected-get', null, callback);
-    },
+    ArticleCommunicator.prototype.getSelectedCategories = function(callback) {
+        PluginAPI.request('article-categories-selected-get', null, callback);
+    };
 
     /**
      * Save the currently selected categories
      *
      * @param {Function} callback function(Boolean), called when categories has been saved
      */
-    saveCategories: function(callback) {
+    ArticleCommunicator.prototype.saveCategories = function(callback) {
         this.getSelectedCategories(function(categories) {
             this.setCategories(categories, callback);
         });
-    },
+    };
 
     /**
      * Set selected categories
@@ -133,11 +168,11 @@ var ArticleCommunicator = {
      * @param {Array} categories List of category IDs that should be set
      * @param {Function} callback function(Boolean), called when categories have been set
      */
-    setCategories: function(categories, callback) {
-        AppAPI.request('article-categories-selected-set', {
+    ArticleCommunicator.prototype.setCategories = function(categories, callback) {
+        PluginAPI.request('article-categories-selected-set', {
             categories: categories
         }, callback);
-    },
+    };
 
     /**
      * Add the given categories to the list of categories
@@ -145,12 +180,12 @@ var ArticleCommunicator = {
      * @param {Array} categories List of category IDs to add
      * @param {Function} callback function(Boolean), called when the categories have been set
      */
-    addCategories: function(categories, callback) {
+    ArticleCommunicator.prototype.addCategories = function(categories, callback) {
 
-        AppAPI.request('article-categories-add', {
+        PluginAPI.request('article-categories-add', {
             categories: categories
         }, callback);
-    },
+    };
 
     /**
      * Remove the given categories from the list of categories
@@ -158,11 +193,11 @@ var ArticleCommunicator = {
      * @param {Array} categories List of category IDs to remove
      * @param {Function} callback function(Boolean), called when the categories have been removed
      */
-    removeCategories: function(categories, callback) {
-        AppAPI.request('article-categories-remove', {
+    ArticleCommunicator.prototype.removeCategories = function(categories, callback) {
+        PluginAPI.request('article-categories-remove', {
             categories: categories
         }, callback);
-    },
+    };
 
     /**
      * Set the main category of the current article
@@ -170,21 +205,21 @@ var ArticleCommunicator = {
      * @param {Number} category The ID of the category to set as the main category
      * @param {Function} callback function(Boolean), called when the main category has been set
      */
-    setMainCategory: function(category, callback) {
-        AppAPI.request('article-categories-main-set', {
+    ArticleCommunicator.prototype.setMainCategory = function(category, callback) {
+        PluginAPI.request('article-categories-main-set', {
             category: category
         }, callback);
-    },
+    };
 
     /**
      * Get the source set for the article
      *
      * @param {Function} callback function(String), name of the source
      */
-    getSource: function(callback) {
+    ArticleCommunicator.prototype.getSource = function(callback) {
 
-        AppAPI.request('article-source-get', null, callback);
-    },
+        PluginAPI.request('article-source-get', null, callback);
+    };
 
     /**
      * Set the source for the article
@@ -192,20 +227,20 @@ var ArticleCommunicator = {
      * @param {String} value The new value to be set as source
      * @param {Function} callback function(Boolean), called when the source has been set
      */
-    setSource: function(value, callback) {
-        AppAPI.request('article-source-set', {
+    ArticleCommunicator.prototype.setSource = function(value, callback) {
+        PluginAPI.request('article-source-set', {
             source: value
         }, callback);
-    },
+    };
 
     /**
      * Get the status for the article
      *
      * @param {Function} callback function(String), current status
      */
-    getStatus: function(callback) {
-        AppAPI.request('article-status-get', null, callback);
-    },
+    ArticleCommunicator.prototype.getStatus = function(callback) {
+        PluginAPI.request('article-status-get', null, callback);
+    };
 
     /**
      * Set the status for the article
@@ -213,20 +248,20 @@ var ArticleCommunicator = {
      * @param {String} status The new status to be set (draft, waiting, published)
      * @param {Function} callback function(Boolean), called when the source has been set
      */
-    setStatus: function(status, callback) {
-        AppAPI.request('article-status-set', {
+    ArticleCommunicator.prototype.setStatus = function(status, callback) {
+        PluginAPI.request('article-status-set', {
             status: status
         }, callback);
-    },
+    };
 
     /**
      * Get the published-date
      *
      * @param {Function} callback function(String), current published datetime
      */
-    getPublishedDatetime: function(callback) {
-        AppAPI.request('article-published-get', null, callback);
-    },
+    ArticleCommunicator.prototype.getPublishedDatetime = function(callback) {
+        PluginAPI.request('article-published-get', null, callback);
+    };
 
     /**
      * Set the published-date
@@ -234,20 +269,20 @@ var ArticleCommunicator = {
      * @param {String} published Date to be set (YYYY-MM-DD HH:MM:SS)
      * @param {Function} callback function(Boolean), called when done
      */
-    setPublishedDatetime: function(published, callback) {
-        AppAPI.request('article-published-set', {
+    ArticleCommunicator.prototype.setPublishedDatetime = function(published, callback) {
+        PluginAPI.request('article-published-set', {
             published: published
         }, callback);
-    },
+    };
 
     /**
      * Get the authors set in the article
      *
      * @param {Function} callback function([String]), currently set authors
      */
-    getAuthors: function(callback) {
-        AppAPI.request('article-authors-get', null, callback);
-    },
+    ArticleCommunicator.prototype.getAuthors = function(callback) {
+        PluginAPI.request('article-authors-get', null, callback);
+    };
 
     /**
      * Set authors for the article
@@ -255,11 +290,11 @@ var ArticleCommunicator = {
      * @param {Array} authors List of authors that should be set
      * @param {Function} callback function(Boolean), called when it has been set
      */
-    setAuthors: function(authors, callback) {
-        AppAPI.request('article-authors-set', {
+    ArticleCommunicator.prototype.setAuthors = function(authors, callback) {
+        PluginAPI.request('article-authors-set', {
             authors: authors
         }, callback);
-    },
+    };
 
     /**
      * Add the given authors to the list of authors
@@ -267,11 +302,11 @@ var ArticleCommunicator = {
      * @param {Array} authors List of authors to add
      * @param {Function} callback function(Boolean), called when it has been set
      */
-    addAuthors: function(authors, callback) {
-        AppAPI.request('article-authors-add', {
+    ArticleCommunicator.prototype.addAuthors = function(authors, callback) {
+        PluginAPI.request('article-authors-add', {
             authors: authors
         }, callback);
-    },
+    };
 
     /**
      * Remove the given authors from the list of authors
@@ -279,20 +314,20 @@ var ArticleCommunicator = {
      * @param {Array} authors List of authors to remove
      * @param {Function} callback function([String]), author list as it is after the authors has been removed
      */
-    removeAuthors: function(authors, callback) {
-        AppAPI.request('article-authors-remove', {
+    ArticleCommunicator.prototype.removeAuthors = function(authors, callback) {
+        PluginAPI.request('article-authors-remove', {
             authors: authors
         }, callback);
-    },
+    };
 
     /**
      * Get the dossiers set in the article
      *
      * @param {Function} callback function([Object Dossiers]), current dossiers
      */
-    getDossiers: function(callback) {
-        AppAPI.request('article-dossiers-get', null, callback);
-    },
+    ArticleCommunicator.prototype.getDossiers = function(callback) {
+        PluginAPI.request('article-dossiers-get', null, callback);
+    };
 
     /**
      * Add the given dossiers to the list of dossiers
@@ -300,11 +335,32 @@ var ArticleCommunicator = {
      * @param {Array} dossiers List of dossiers to add
      * @param {Function} callback function(Boolean), called when it has been set
      */
-    addDossiers: function(dossiers, callback) {
-        AppAPI.request('article-dossiers-add', {
+    ArticleCommunicator.prototype.addDossiers = function(dossiers, callback) {
+        PluginAPI.request('article-dossiers-add', {
             dossiers: dossiers
         }, callback);
-    },
+    };
+
+    /**
+     * Set the keyword-list on the article
+     *
+     * @param {Array} keywords List of keywords to add
+     * @param {Function} callback Function to call when keywords have been set
+     */
+    ArticleCommunicator.prototype.setKeywords = function(keywords, callback) {
+        PluginAPI.request('article-keywords-set', {
+            keywords: keywords
+        }, callback);
+    };
+
+    /**
+     * Get the current set of keywords on the article
+     *
+     * @param {Function} callback Function to call with the result
+     */
+    ArticleCommunicator.prototype.getKeywords = function(callback) {
+        PluginAPI.request('article-keywords-get', null, callback);
+    };
 
     /**
      * Remove the given dossiers from the list of dossiers
@@ -312,20 +368,20 @@ var ArticleCommunicator = {
      * @param {Array} dossiers List of authors to remove
      * @param {Function} callback function([Object Dossiers]), current dossiers
      */
-    removeDossiers: function(dossiers, callback) {
-        AppAPI.request('article-dossiers-remove', {
+    ArticleCommunicator.prototype.removeDossiers = function(dossiers, callback) {
+        PluginAPI.request('article-dossiers-remove', {
             dossiers: dossiers
         }, callback);
-    },
+    };
 
     /**
      * Gets the current article content
      *
      * @param {Function} callback function(Object Content)
      */
-    getCurrentContent: function(callback) {
-        AppAPI.request('article-content-get', null, callback);
-    },
+    ArticleCommunicator.prototype.getCurrentContent = function(callback) {
+        PluginAPI.request('article-content-get', null, callback);
+    };
 
     /**
      * Updates current article content
@@ -333,20 +389,20 @@ var ArticleCommunicator = {
      * @param {String} content The new content for the article
      * @param {Function} callback function(Boolean), called when it has been set
      */
-    setCurrentContent: function(content, callback) {
-        AppAPI.request('article-content-set', {
+    ArticleCommunicator.prototype.setCurrentContent = function(content, callback) {
+        PluginAPI.request('article-content-set', {
             content: content
         }, callback);
-    },
+    };
 
     /**
      * Get the article type of the current article
      *
      * @param {Function} callback function(Int)
      */
-    getArticletypeId: function(callback) {
-        AppAPI.request('article-type-get', null, callback);
-    },
+    ArticleCommunicator.prototype.getArticletypeId = function(callback) {
+        PluginAPI.request('article-type-get', null, callback);
+    };
 
     /**
      * Set the article type of the current article
@@ -354,11 +410,11 @@ var ArticleCommunicator = {
      * @param {Number} articletypeId The new article type of the article
      * @param {Function} callback function(Boolean), called when it has been set
      */
-    setArticletypeId: function(articletypeId, callback) {
-        AppAPI.request('article-type-set', {
+    ArticleCommunicator.prototype.setArticletypeId = function(articletypeId, callback) {
+        PluginAPI.request('article-type-set', {
             articletype: articletypeId
         }, callback);
-    },
+    };
 
     /**
      * Maximize the app view
@@ -366,34 +422,34 @@ var ArticleCommunicator = {
      * @param {String} title Title to give the maximized view
      * @param {function} onClose Function to call when the window is closed/minimized
      */
-    maximizeAppWindow: function(title, onClose) {
+    ArticleCommunicator.prototype.maximizeAppWindow = function(title, onClose) {
         var event = 'editor-pane-close-' + new Date().getTime();
 
-        AppAPI.request('editor-pane-maximize', {
+        PluginAPI.request('editor-pane-maximize', {
             title : title,
             event : event
         });
-        AppAPI.eventListeners.removeAll(event);
-        AppAPI.eventListeners.add(event, onClose);
-    },
+        PluginAPI.eventListeners.removeAll(event);
+        PluginAPI.eventListeners.add(event, onClose);
+    };
 
     /**
      * Restore the app pane to the default size
      *
      * @param {function} callback Callback to call after everything is done
      */
-    restoreAppWindow: function(callback) {
-        AppAPI.request('restore-app-window', {}, callback);
-    },
+    ArticleCommunicator.prototype.restoreAppWindow = function(callback) {
+        PluginAPI.request('restore-app-window', {}, callback);
+    };
 
     /**
      * Get the current byline
      *
      * @param {function} callback function(String), xml string with the current byline
      */
-    getByline: function(callback) {
-        AppAPI.request("article-byline-get", null, callback);
-    },
+    ArticleCommunicator.prototype.getByline = function(callback) {
+        PluginAPI.request("article-byline-get", null, callback);
+    };
 
     /**
      * Set the byline
@@ -402,23 +458,79 @@ var ArticleCommunicator = {
      * @param {Boolean} save If true, force save after updating byline information
      * @param {Function} callback function(Boolean), called when it has been set
      */
-    setByline: function(byline, save, callback) {
-        AppAPI.request('article-byline-set', {
+    ArticleCommunicator.prototype.setByline = function(byline, save, callback) {
+        PluginAPI.request('article-byline-set', {
             save: save,
             byline: byline
         }, callback);
-    },
+    };
 
-    setGeolocations: function(geolocations, callback) {
-        AppAPI.request('article-geolocations-set', {
+    /**
+     * Set geolocation
+     *
+     * @param {Object} geolocations The location to set
+     * @param {Function} callback function(Boolean), called when it has been set
+     */
+    ArticleCommunicator.prototype.setGeolocations = function(geolocations, callback) {
+        PluginAPI.request('article-geolocations-set', {
             geolocations: geolocations
         }, callback);
-    },
+    };
 
-    getGeolocations: function(callback) {
-        AppAPI.request("article-geolocations-get", null, callback);
-    }
+    /**
+     * Get geolocation
+     *
+     * @param {Function} callback function(Object), retrieves the currently set geo location
+     */
+    ArticleCommunicator.prototype.getGeolocations = function(callback) {
+        PluginAPI.request("article-geolocations-get", null, callback);
+    };
 
-};
+    /**
+     * Fetches a list of all properties available to an article.
+     *
+     * @param {Function} callback Callback called with an array of property objects.
+     */
+    ArticleCommunicator.prototype.getProperties = function(callback) {
+        PluginAPI.request("article-properties-get", null, callback);
+    };
 
-AppAPI.Article = ArticleCommunicator;
+    /**
+     * Updates and saves one or more property values. The input is a simple object with property names and their
+     * new value. The supplied callback is called with an updated list of properties.
+     *
+     * @example
+     * PluginAPI.Article.setProperties({
+     *     fooProperty: "bar",
+     *     barProperty: "foo"
+     * }, function(properties) {
+     *     // Returns a complete and updated list of properties.
+     * })
+     *
+     * @param {Object} properties An object of property names and corresponding values.
+     * @param {Function} callback Callback called with an updated list of properties.
+     */
+    ArticleCommunicator.prototype.setProperties = function(properties, callback) {
+        PluginAPI.request("article-properties-set", {
+            properties: properties
+        }, callback);
+    };
+
+    /**
+     * Updates and saves a single property.
+     *
+     * @param {String} name The property to update.
+     * @param value The updated value.
+     * @param {Function} callback Callback called with an updated list of properties.
+     */
+    ArticleCommunicator.prototype.setProperty = function(name, value, callback) {
+        var data = {};
+        data[name] = value;
+        PluginAPI.request("article-properties-set", {
+            properties: data
+        }, callback);
+    };
+
+    return new ArticleCommunicator();
+
+})();
