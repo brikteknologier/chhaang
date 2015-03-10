@@ -13,35 +13,39 @@ body
   font-family "Proxima Nova", proxima-nova
 
 .searchRow
+  margin-top 1px
   margin-bottom 1px
   height 30px
   font-size 24px
-  font-weight bold
   background $white
   position relative
   img
     position absolute
-    top 6px
+    top 5px
     right 0
   .label
     color $grey
     position absolute
     right 75px
-    top 6px
-    font-size 20px
+    top 9px
+    font-size 14px
     line-height initial
   .icon-search
     color $white
     background $green
-    padding 5px
+    padding 3px
+    display inline-block
+    height 24px
     text-align center
     font-size 25px
+    cursor pointer
+    margin-left 1px
   .searchInputSizer
     position absolute
     margin 0
     top 0
-    left 32px
-    right 187px
+    left 31px
+    right 153px
     bottom 0
     overflow hidden
     min-width 100px
@@ -50,8 +54,8 @@ body
       z-index 1
       border 0
       width 100%
-      padding-left 3px
-      font-size 20px
+      padding-left 5px
+      font-size 14px
       position absolute
       margin 0
       top 0
@@ -70,16 +74,18 @@ body
 
 .result-element
   color $black
-  margin 2px
-  height 116px
+  font-size 15px
+  padding 5px 0
+  margin 2px 2px 10px 2px
+  height 84px
   overflow hidden
   .poster
     float left
     overflow hidden
     width 150px
+    margin-right 5px
     img
       width 100%
-    margin-right 2px
   .by-uploaded
     .label
       margin-right 5px
@@ -87,7 +93,10 @@ body
     .age
       position absolute
       right 5px
-    margin-bottom 2px
+    margin-bottom 5px
+  .description
+    overflow hidden
+    height 47px
   .title
     font-weight bold
     white-space nowrap
@@ -117,10 +126,10 @@ body
   border 2px solid $white
 
 #videoSelected
-  padding 3px
+  padding 10px 3px 10px 3px
   background darken($white, 10)
   position relative
-  margin-bottom 1px
+  margin-bottom 5px
   *
     text-overflow ellipsis
     overflow hidden
@@ -129,12 +138,12 @@ body
     overflow hidden
     text-overflow ellipsis
     width 100%
-    font-size 30px
+    font-size 24px
     white-space nowrap
     overflow hidden
     margin auto
   .video
-    margin-bottom 2px
+    margin-bottom 15px
   .buttons
     #insertButton
       text-decoration initial
