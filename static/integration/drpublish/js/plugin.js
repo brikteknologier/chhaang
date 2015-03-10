@@ -172,7 +172,10 @@ $(document).ready(function() {
 
   // --- init ---
 
-  $('#searchInput').on('keyup', staggerSearch(2000, search));
+  var staggeredSearch = staggerSearch(2000, search);
+  $('#searchInput').on('keyup', staggeredSearch);
+  // Search icon click emulate enter on #searchInput text field
+  $('#searchIcon').on('click', function() { staggeredSearch({keyCode: 13}); });
 
   $('#insertButton').click(function() {
     var element = getInsertionElement();
