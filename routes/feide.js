@@ -19,6 +19,7 @@ module.exports = function(app, passport) {
     res.render('feide/index', app.settings);
   });
 
+  // Return falsy if access allowed, or error string if disallowed
   function accessDisallowed(idpUser) {
     function checkString(field, requiredValue) {
       if (idpUser[field] != requiredValue)
