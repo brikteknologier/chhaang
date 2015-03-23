@@ -27,10 +27,12 @@ module.exports = function(app, passport) {
     }
 
     function checkList(field, requiredValue) {
+      var error = field + '="' + idpUser[field] + '", but is missing "' + requiredValue + '"';
       (idpUser[field] || "").split(',').forEach(function(value) {
-        if (value == requiredValue) return null;
+        if (value == requiredValue)
+          error = null;
       });
-      return field + '="' + idpUser[field] + '", but is missing "' + requiredValue + '"';
+      return error;
     }
 
     var ar = app.config.Feide.accessRequirement || {};
