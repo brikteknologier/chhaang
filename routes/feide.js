@@ -34,6 +34,7 @@ module.exports = function(app, passport) {
     }
 
     var ar = app.config.Feide.accessRequirement || {};
+    app.log.info('checking against access rules: ' + JSON.stringify(ar));
     for (var field in ar) {
       var requirement = ar[field];
 
