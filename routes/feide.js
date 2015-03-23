@@ -19,6 +19,34 @@ module.exports = function(app, passport) {
     res.render('feide/index', app.settings);
   });
 
+  function accessDisallowed(idpUser) {
+    function checkString(field, requiredValue) {
+      if (idpUser[field] != requiredValue)
+        return field + '="' + idpUser[field] + '", but must be "' + requiredValue + '"';
+    }
+
+    function checkList(field, requiredValue) {
+      (idpUser[field] || "").split(',').forEach(function(value) {
+        if (value == requiredValue) return null;
+      });
+      return field + '="' + idpUser[field] + '", but is missing "' + requiredValue + '"';
+    }
+
+    var ar = app.config.Feide.accessRequirement || {};
+    for (var field in ar) {
+      var requirement = ar[field];
+
+      var error = null;
+
+      if (requirement.type == 'list')
+        error = checkList(field, requirement.value);
+      else
+        error = checkString(field, requirement.value);
+
+      if (error) return error;
+    }
+  }
+
   function invalidateAuthKey(req, res) {
     var authKey = sm.cookie.get(req);
     if (authKey) {
@@ -63,6 +91,11 @@ module.exports = function(app, passport) {
   controller.define('loginCallback', function(req, res) {
     function locallyAuthenticateFeideUser(idpUser) {
       app.log.info('Feide auth login callback success: ' + JSON.stringify(idpUser));
+
+      var reason = accessDisallowed(idpUser);
+      if (reason)
+        return res.send(401, reason);
+
       // `eduPersonTargetedID` is available in an organization's Feide system.
       // `uid` is available in Feide OpenIdP.
       var idpId = idpUser.eduPersonTargetedID || idpUser.uid;
