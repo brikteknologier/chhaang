@@ -28,7 +28,7 @@
     "nib": "^1.0.4",
     "node-aptoma-plugin-auth": "^1.2.0",
     "passport": "^0.2.1",
-    "passport-saml": "^0.5.3",
+    "passport-saml": "^0.9.1",
     "request": "^2.45.0",
     "seraph": "^0.9.12",
     "stoutmeal": "git+ssh://git@github.com:brikteknologier/stoutmeal.git",
