@@ -4,7 +4,7 @@
   "description": "BRIK's plugin server.",
   "main": "chhaang.js",
   "scripts": {
-    "test": "node node_modules/mocha/bin/mocha"
+    "test": "node node_modules/mocha/bin/mocha --no-deprecation"
   },
   "repository": {
     "type": "git",

@@ -14,7 +14,7 @@ var package = require('./package.json');
 
 var server = module.exports = http.createServer();
 
-module.exports = function init(config) {
+module.exports = function init(config, callback) {
   var controller = Controller();
   var app = controller.app;
 
@@ -80,5 +80,7 @@ module.exports = function init(config) {
 
     // start
     server.listen(config.port);
+
+    callback && callback(null, server);
   });
 };
