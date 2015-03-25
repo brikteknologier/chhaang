@@ -12,11 +12,9 @@ var seraphInit = require('seraph');
 var barleyInit = require('barley');
 var package = require('./package.json');
 
-var configKeys = [ 'port', 'kvass', 'stoutmeal', 'neo4j' ];
-var readConfig = require('general-hammond')('chhaang', configKeys);
 var server = module.exports = http.createServer();
 
-readConfig(function(config) {
+module.exports = function init(config) {
   var controller = Controller();
   var app = controller.app;
 
@@ -83,4 +81,4 @@ readConfig(function(config) {
     // start
     server.listen(config.port);
   });
-});
+};
