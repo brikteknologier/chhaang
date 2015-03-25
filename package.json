@@ -2,7 +2,7 @@
   "name": "chhaang",
   "version": "1.0.0",
   "description": "BRIK's plugin server.",
-  "main": "index.js",
+  "main": "chhaang.js",
   "scripts": {
     "test": "node node_modules/mocha/bin/mocha"
   },
