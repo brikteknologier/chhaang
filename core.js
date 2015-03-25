@@ -79,8 +79,8 @@ module.exports = function init(config, callback) {
     app.use(currentUser);
 
     // start
-    server.listen(config.port);
-
-    callback && callback(null, server);
+    server.listen(config.port, function listening() {
+      callback(null, server);
+    });
   });
 };
