@@ -27,7 +27,7 @@ module.exports = function(app, passport) {
     }
 
     function checkList(field, requiredValue) {
-      var error = field + '="' + idpUser[field] + '", but is missing "' + requiredValue + '"';
+      var error = field + '="' + idpUser[field] + '", is missing "' + requiredValue + '"';
       (idpUser[field] || "").split(',').forEach(function(value) {
         if (value == requiredValue)
           error = null;
