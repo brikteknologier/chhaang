@@ -80,7 +80,7 @@ module.exports = function init(config, callback) {
 
     // start
     server.listen(config.port, function listening() {
-      callback(null, server);
+      callback && callback(null, server);
     });
   });
 };
