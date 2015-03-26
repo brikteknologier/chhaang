@@ -4,30 +4,30 @@ var assert = require('assert');
 var chhaang = require('../core');
 
 var config = {
-  // log: [{"transport":"console"}]},
+//  log: [{"transport":"console"}] // UNCOMMENT IF DEBUGGING
 };
 
 describe("server with no extensions enabled", function() {
   var server;
   var rootUrl;
   
-  beforeEach(function(done) {
-    chhaang(config, function(err, createdServer) {
-      server = createdServer;
-      var location = server.address();
-      rootUrl = 'http://' + location.address + ':' + location.port + '/integration/';
-      done(err);
-    });
+  chhaang(config, function(err, createdServer) {
+    server = createdServer;
+    server.on('clientError', console.log);
+    var location = server.address();
+    rootUrl = 'http://' + location.address + ':' + location.port + '/integration/';
   });
 
-  afterEach(function() {
-    server.close();
-    server = null;
-    rootUrl = null;
+  beforeEach(function(done) {
+    function areWeThereYet() {
+      if (server) return done();
+      setTimeout(areWeThereYet, 100);
+    }
+    areWeThereYet();
   });
 
   it("handles requests to root url", function(done) {
-    assert(server);
+    this.slow(1000);
     http.get(rootUrl, function(res) {
       assert(res.statusCode >= 200 && res.statusCode < 400);
       done();
