@@ -27,7 +27,6 @@ module.exports = function init(config, callback) {
   process.title = (config.id || "anonymous") + "-chhaang-" + package.version;
   app.log = require('logginator')('chhaang', config.log);
   require('winston-tagged-http-logger')(server, app.log.createSublogger('http'));
-  app.use(express.cookieParser());
 
   // passport & session
   if (config.Feide) {
