@@ -47,7 +47,10 @@ module.exports = function(app, passport) {
       else
         error = checkString(field, requirement.value);
 
-      if (error) return error;
+      if (error) {
+        app.log.info('access rules check failed: ' + error);
+        return error;
+      }
     }
   }
 
