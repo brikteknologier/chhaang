@@ -8,8 +8,6 @@ var _ = require('underscore');
 var nib = require('nib')();
 var passport = require('passport');
 var SamlStrategy = require('passport-saml').Strategy;
-var seraphInit = require('seraph');
-var barleyInit = require('barley');
 var package = require('./package.json');
 
 var server = module.exports = http.createServer();
@@ -61,25 +59,13 @@ module.exports = function init(config, callback) {
     });
   }
 
-  var seraph = seraphInit(config.neo4j);
-  barleyInit(seraph, {}, function(err, models) {
-    if (err) {
-      app.log.error("failed to initiale models. error follows");
-      app.log.error(err.message);
-      app.log.error(err);
-      process.exit(1);
-    }
-    app.db = seraph;
-    app.db.models = models;
+  // routes
+  require('./routes')(controller, passport);
 
-    // routes
-    require('./routes')(controller, passport);
+  app.use(currentUser);
 
-    app.use(currentUser);
-
-    // start
-    server.listen(config.port, function listening() {
-      callback && callback(null, server);
-    });
+  // start
+  server.listen(config.port, function listening() {
+    callback && callback(null, server);
   });
 };

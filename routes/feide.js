@@ -1,14 +1,17 @@
 var Controller = require('controller');
 var stoutmeal = require('stoutmeal');
 var stoutmealDefaults = require('stoutmeal/config');
+var barleyInit = require('barley');
 var url = require('url');
+var async = require('async');
+var seraphInit = require('seraph');
 
 module.exports = function(app, passport) {
   var log = app.log;
   var REDIRECT_COOKIE = 'redirectAfterLogin';
   var defaultRedirect = '/';
 
-  var User = app.db.models.user;
+  var User = null; // Will be set by initUserModel
   
   var sm = stoutmeal(stoutmealDefaults(app.config.stoutmeal));
   
@@ -18,6 +21,21 @@ module.exports = function(app, passport) {
   controller.define('index', function(req, res) {
     res.render('feide/index', app.settings);
   });
+
+  function initUserModel(done) {
+    if (User) return done(null, User);
+    var seraph = seraphInit(app.config.neo4j);
+    barleyInit(seraph, {}, function(err, models) {
+      if (err) {
+        app.log.error("failed to initiale models. error follows:");
+        app.log.error(err.message);
+        app.log.error(err);
+        return done('Feide plugin failed to initialize User model.');
+      }
+      User = models.user;
+      done(null, User);
+    });
+  }
 
   // Return falsy if access allowed, or error string if disallowed
   function accessDisallowed(idpUser) {
@@ -118,12 +136,20 @@ module.exports = function(app, passport) {
         // `email` is available in Feide OpenIdp.
         email: idpUser.mail || idpUser.email || ''
       };
-      User.createOrUpdateFromIdentityProvider('feide', idpId, translatedUser, function(err, user) {
-        app.log.info("User #" + user.id + " updated or created locally.");
+
+      async.waterfall([
+        initUserModel,
+        function(User, cb) {
+          User.createOrUpdateFromIdentityProvider('feide', idpId, translatedUser, cb);
+        }
+      ], function(err, user) {
         if (err) {
           app.log.error("Error creating or updating Feide user '" + idpId + "': " + JSON.stringify(err));
           return res.send(500, err);
         }
+
+        app.log.info("User #" + user.id + " updated or created locally.");
+
         sm.auth.createAuthEntry(user.id, function(err, authKey) {
           sm.cookie.set(res, user, authKey);
           var redirectTo = req.cookies[REDIRECT_COOKIE] || '/';
