@@ -41,7 +41,7 @@ describe("server with DrPublish enabled", function() {
 
   it("does not have Feide enabled", function(done) {
     this.slow(1000);
-    http.get(rootUrl + '/integration/feide/', function(res) {
+    http.get(rootUrl + '/feide/', function(res) {
       assert(res.statusCode >= 400 && res.statusCode < 500);
       done();
     });
@@ -49,7 +49,7 @@ describe("server with DrPublish enabled", function() {
 
   it("has DrPublish enabled", function(done) {
     this.slow(1000);
-    http.get(rootUrl + '/integration/drpublish/index', function(res) {
+    http.get(rootUrl + '/drpublish/index', function(res) {
       assert(res.statusCode >= 200 && res.statusCode < 400);
       done();
     });
