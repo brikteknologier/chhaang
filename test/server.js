@@ -15,7 +15,7 @@ describe("server with no extensions enabled", function() {
     server = createdServer;
     server.on('clientError', console.log);
     var location = server.address();
-    rootUrl = 'http://' + location.address + ':' + location.port + '/integration/';
+    rootUrl = 'http://' + location.address + ':' + location.port + '/integration';
   });
 
   beforeEach(function(done) {
@@ -30,6 +30,22 @@ describe("server with no extensions enabled", function() {
     this.slow(1000);
     http.get(rootUrl, function(res) {
       assert(res.statusCode >= 200 && res.statusCode < 400);
+      done();
+    });
+  });
+
+  it("does not have Feide enabled", function(done) {
+    this.slow(1000);
+    http.get(rootUrl + '/integration/feide/', function(res) {
+      assert(res.statusCode >= 400 && res.statusCode < 500);
+      done();
+    });
+  });
+
+  it("does not have DrPublish enabled", function(done) {
+    this.slow(1000);
+    http.get(rootUrl + '/integration/drpublish/index', function(res) {
+      assert(res.statusCode >= 400 && res.statusCode < 500);
       done();
     });
   });
