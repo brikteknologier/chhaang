@@ -29,7 +29,7 @@ module.exports = function init(config, callback) {
   // passport & session
   if (config.Feide) {
     var strategy = new SamlStrategy(
-      config.Feide.saml,
+      config.Feide.saml || {},
       function(profile, next) { next(null, profile); });
     passport.serializeUser(function(user, next) { next(null, user); });
     passport.deserializeUser(function(user, next) { next(null, user); });
