@@ -63,11 +63,13 @@ $(document).ready(function() {
     $(element).addClass('selected');
     videoSelected = true;
     $('#videoSelected').show();
+    var ratio = parseInt($('#widthInput').val(), 10) / parseInt($('#heightInput').val(), 10);
     var el = generateEmbedElement(video);
+    var thumbnailHeight = 180;
     setElementProps(
       el,
-      300,
-      169,
+      Math.floor(thumbnailHeight * ratio),
+      thumbnailHeight,
       false
     );
     var videoContainer = $('#videoSelected .video');
