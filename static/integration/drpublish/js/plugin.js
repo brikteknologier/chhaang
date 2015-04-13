@@ -5,6 +5,7 @@ $(document).ready(function() {
   var searchLimit = 21;
   var searchSkip = 0;
   var videoSelected = false;
+  var assumedChaptersWidth = 220;
 
   function initApp() {
     function getParameterByName(name) {
@@ -71,15 +72,19 @@ $(document).ready(function() {
   }
 
   function updateThumbnail() {
-    var ratio = parseInt($('#widthInput').val(), 10) / parseInt($('#heightInput').val(), 10);
+    var widthSansChapters = parseInt($('#widthInput').val(), 10);
+    if ($('#chaptersInput').prop('checked'))
+      widthSansChapters -= assumedChaptersWidth;
+    var ratio = widthSansChapters / parseInt($('#heightInput').val(), 10);
     var el = $('#videoSelected .video div');
     var thumbnailHeight = 180;
     setElementProps(
       el,
       Math.floor(thumbnailHeight * ratio),
       thumbnailHeight,
-      false
+      false // Chapters do not scale - makes thumbnail distorted
     ); 
+    console.log($('#chaptersInput').val());
     var videoContainer = $('#videoSelected .video');
     videoContainer.html('').append(el);
  }
@@ -186,7 +191,7 @@ $(document).ready(function() {
       el,
       $('#widthInput').val(),
       $('#heightInput').val(),
-      $('#chaptersInput').val() == 'checked'
+      $('#chaptersInput').prop('checked')
     );
     return el;
   }
@@ -225,6 +230,15 @@ $(document).ready(function() {
     });
   }
 
+  function chaptersCheckboxChanged() {
+    var width = parseInt($('#widthInput').val(), 10);
+    if ($('#chaptersInput').prop('checked'))
+      width += assumedChaptersWidth;
+    else
+      width -= assumedChaptersWidth;
+    $('#widthInput').val(width);
+  }
+
   // --- init ---
 
   var staggeredSearch = staggerSearch(2000, search);
@@ -240,7 +254,7 @@ $(document).ready(function() {
   });
 
   $(".buttons input[type=number]").on('change', staggerThumbnailUpdate(1000, updateThumbnail));
-  $(".buttons input[type=checkbox]").on('change', updateThumbnail);
+  $(".buttons input[type=checkbox]").on('change', chaptersCheckboxChanged);
 
   initApp();
 
