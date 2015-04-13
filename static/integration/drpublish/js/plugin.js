@@ -67,7 +67,8 @@ $(document).ready(function() {
     setElementProps(
       el,
       300,
-      169
+      169,
+      false
     );
     var videoContainer = $('#videoSelected .video');
     var collectedTags = $.map(video.tags || [], function(x){return x.tag}).join(', ');
@@ -137,10 +138,17 @@ $(document).ready(function() {
     search(true);
   }
 
-  function setElementProps(element, width, height) {
-    element.children('iframe')
-      .attr('width', width)
-      .attr('height', height);
+  function setElementProps(element, width, height, enableChapters) {
+    var ife = element.children('iframe');
+
+    ife.attr('width', width);
+    ife.attr('height', height);
+
+    var src = ife.attr('src').replace(/\?chapters=on$/, '');
+    if (enableChapters)
+      src += "?chapters=on";
+    ife.attr('src', src);
+
     element.attr('style',
                  'width: ' + width + 'px; ' +
                  'height: ' + height + 'px; ' +
@@ -153,7 +161,8 @@ $(document).ready(function() {
     setElementProps(
       el,
       $('#widthInput').val(),
-      $('#heightInput').val()
+      $('#heightInput').val(),
+      $('#chaptersInput').val() == 'checked'
     );
     return el;
   }
@@ -162,7 +171,7 @@ $(document).ready(function() {
     var siteBase = /:\/\/([^\/]*)/.exec(window.location.href)[1];
     var urlBase = '//' + siteBase;
     
-    // Dummy width, height.  Will be set properly on setEditorPreview.
+    // Dummy width, height.  Will be set properly on setElementProps.
     var element = $('<div style="width: 0px; height: 0px;">');
     var videoFrame = $('<iframe width="0" height="0" src="' + urlBase + '/video/embed/' + video.uuid + '" frameborder="0"></iframe>');
     element.append(videoFrame);

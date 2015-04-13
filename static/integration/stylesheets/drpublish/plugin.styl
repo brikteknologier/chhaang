@@ -149,9 +149,11 @@ body
       text-decoration initial
       color $white
       background $grey
-      padding 10px
+      padding 0 10px
       width 120px
       font-size 20px
+      height 40px
+      display inline-block
       .icon
         padding-right 5px
     #insertButton.disabled
@@ -163,7 +165,12 @@ body
     line-height 40px
     .label, #insertButton, input
       margin-right 5px
-    input
+    input[type=number]
       width 60px
       border 1px
       font-size 14px
+    input[type=checkbox]
+      vertical-align text-bottom
+  .parameters
+    display inline-block
+    line-height 1em

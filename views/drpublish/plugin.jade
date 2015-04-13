@@ -28,10 +28,14 @@ body
       a#insertButton(href='#')
         .icon.icon-circle-arrow-left
         | Bruk video
-      span.label Bredde / Høyde:
-      input#widthInput(type='number', value='#{DrPublish.width}')
-      span.label /
-      input#heightInput(type='number', value='#{DrPublish.height}')
+      div.parameters
+        span.label Bredde / Høyde:
+        input#widthInput(type='number', value='#{DrPublish.width}')
+        span.label /
+        input#heightInput(type='number', value='#{DrPublish.height}')
+        br
+        span.label Vis kapitler:
+        input#chaptersInput(type='checkbox')
   div#searchResults
 
   script(type="text/javascript", src="//use.typekit.net/xds4wqv.js")
