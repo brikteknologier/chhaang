@@ -20,6 +20,18 @@ $(document).ready(function() {
     // App already authenticated in index frame
     PluginAPI.authenticated = true;
   }
+
+  function staggerThumbnailUpdate(ms, fn) {
+    var timeout = null;
+    return function() {
+      if (timeout) return;
+      
+      timeout = setTimeout(function() {
+        timeout = null;
+        fn();
+      }, ms);
+    }
+  }
     
   function staggerSearch(ms, fn) {
     var timeout = null;
@@ -58,24 +70,34 @@ $(document).ready(function() {
     });
   }
 
-  function clickThumbnail(video, element) {
-    $('.result-element').removeClass('selected');
-    $(element).addClass('selected');
-    videoSelected = true;
-    $('#videoSelected').show();
+  function updateThumbnail() {
     var ratio = parseInt($('#widthInput').val(), 10) / parseInt($('#heightInput').val(), 10);
-    var el = generateEmbedElement(video);
+    var el = $('#videoSelected .video div');
     var thumbnailHeight = 180;
     setElementProps(
       el,
       Math.floor(thumbnailHeight * ratio),
       thumbnailHeight,
       false
-    );
+    ); 
     var videoContainer = $('#videoSelected .video');
+    videoContainer.html('').append(el);
+ }
+
+  function clickThumbnail(video, element) {
+    $('.result-element').removeClass('selected');
+    $(element).addClass('selected');
+    videoSelected = true;
+    $('#videoSelected').show();
+
+    var videoContainer = $('#videoSelected .video');
+    var el = generateEmbedElement(video);
+    videoContainer.html('').append(el);
+
+    updateThumbnail();
+
     var collectedTags = $.map(video.tags || [], function(x){return x.tag}).join(', ');
     $('#videoSelected .title').text(video.title || '(untitled)');
-    videoContainer.html('').append(el);
   }
 
   function showSearchResults(videos) {
@@ -216,6 +238,9 @@ $(document).ready(function() {
     var element = getInsertionElement();
     PluginAPI.Editor.insertElement(element);
   });
+
+  $(".buttons input[type=number]").on('change', staggerThumbnailUpdate(1000, updateThumbnail));
+  $(".buttons input[type=checkbox]").on('change', updateThumbnail);
 
   initApp();
 
