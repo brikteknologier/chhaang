@@ -5,7 +5,7 @@ $(document).ready(function() {
   var searchLimit = 21;
   var searchSkip = 0;
   var videoSelected = false;
-  var assumedChaptersWidth = 220;
+  var assumedChaptersWidth = 210;
 
   function initApp() {
     function getParameterByName(name) {
