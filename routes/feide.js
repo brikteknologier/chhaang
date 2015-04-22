@@ -118,8 +118,15 @@ module.exports = function(app, passport) {
       app.log.info('Feide auth login callback success: ' + JSON.stringify(idpUser));
 
       var reason = accessDisallowed(idpUser);
-      if (reason)
-        return res.send(401, reason);
+      if (reason) {
+        res.render("feide/accessRequirementFailed", {
+          reason: reason,
+          userName: req.user.displayName || (req.user.givenName + " " + req.user.sn) || "Your Feide user",
+          json: { reason: JSON.stringify(reason),
+                  user: JSON.stringify(req.user) }
+        });
+        return;
+      }
 
       // `eduPersonTargetedID` is available in an organization's Feide system.
       // `uid` is available in Feide OpenIdP.
