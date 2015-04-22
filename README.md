@@ -30,7 +30,7 @@ node chhaang --config <config.json>
 
 * `saml` - SAML metadata config object
 
-### SAML metadata config object
+### saml
 
 * `entryPoint` - Single Sign On URL.  Example: "https://openidp.feide.no/simplesaml/saml2/idp/SSOService.php"
 * `logoutUrl` - Single Sing Out URL.  Example: "https://openidp.feide.no/simplesaml/saml2/idp/SingleLogoutService.php"
