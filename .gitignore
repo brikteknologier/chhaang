@@ -3,3 +3,4 @@ go
 static/integration/stylesheets/chhaang.css
 static/integration/stylesheets/drpublish/plugin.css
 static/integration/stylesheets/feide/feide.css
+newrelic_agent.log
