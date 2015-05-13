@@ -121,7 +121,7 @@ $(document).ready(function() {
           ]),
           $('<div>').addClass('description').html(video.desc)
         ])
-        .attr('title', "Publisert i " + video.area.name)
+        .attr('title', "Publisert i " + video.folder.name)
         .click(function(evt) {
           clickThumbnail(video, evt.currentTarget);
         });
