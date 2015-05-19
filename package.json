@@ -24,7 +24,7 @@
     "general-hammond": "^2.1.1",
     "imbibe": "^0.2.3",
     "jade": "^1.7.0",
-    "logginator": "^1.3.2",
+    "logginator": "^1.3.4",
     "newrelic": "^1.19.0",
     "nib": "^1.0.4",
     "node-aptoma-plugin-auth": "^1.2.0",
