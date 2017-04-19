@@ -22,8 +22,6 @@ module.exports = function init(config, callback) {
   app.config = config;
 
   process.title = (config.id || "anonymous") + "-chhaang-" + package.version;
-  require('./newrelic.js').config.app_name = ['chhaang', config.id || 'anonymous'];
-  require('newrelic');
 
   app.log = require('logginator')('chhaang', config.log);
   require('winston-tagged-http-logger')(server, app.log.createSublogger('http'));
