@@ -2,6 +2,16 @@
 # yarn lockfile v1
 
 
+"@brik/stoutmeal@^0.9.1":
+  version "0.9.1"
+  resolved "https://registry.yarnpkg.com/@brik/stoutmeal/-/stoutmeal-0.9.1.tgz#65ea863a1898722476ad1dbe04b127ee52ea39ce"
+  integrity sha512-g3bI+qwGPvXsiNk4DqoHOQoRSBv6Y/oRidCuSLNWt9ppWHC+PWhNMiw7vsuVSIcOQGn2FHhyO0ogl374zlORjQ==
+  dependencies:
+    async "~0.2.7"
+    randy "~1.4.2"
+    redis "~0.8.3"
+    underscore "~1.4.4"
+
 accepts@~1.2.12, accepts@~1.2.13:
   version "1.2.13"
   resolved "https://registry.yarnpkg.com/accepts/-/accepts-1.2.13.tgz#e5f1f3928c6d95fd96558c36ec3d9d0de4a6ecea"

@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/brikteknologier/chhaang",
   "dependencies": {
+    "@brik/stoutmeal": "^0.9.1",
     "async": "^0.9.0",
     "barley": "git+ssh://git@github.com:brikteknologier/barley.git",
     "controller": "^0.6.2",
@@ -31,7 +32,6 @@
     "passport-saml": "^0.9.2",
     "request": "^2.85.0",
     "seraph": "^0.9.12",
-    "stoutmeal": "git+ssh://git@github.com:brikteknologier/stoutmeal.git",
     "stylus": "^0.49.3",
     "tagged-logger": "^1.0.3",
     "underscore": "^1.7.0",
