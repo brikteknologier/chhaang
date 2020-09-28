@@ -76,10 +76,7 @@ PluginAPI.Editor = (function () {
    * @param {Object} group The action object
    * @param {function} callback function()
    */
-  AH5Communicator.prototype.registerMenuActionGroup = function (
-    group,
-    callback
-  ) {
+  AH5Communicator.prototype.registerMenuActionGroup = function (group, callback) {
     PluginAPI.request('register-menu-action-group', group, callback);
   };
 
@@ -99,11 +96,7 @@ PluginAPI.Editor = (function () {
    * @param {String} element The new element
    * @param {function} callback function(Boolean), called after replacement is done
    */
-  AH5Communicator.prototype.replaceElementById = function (
-    id,
-    element,
-    callback
-  ) {
+  AH5Communicator.prototype.replaceElementById = function (id, element, callback) {
     PluginAPI.request(
       'editor-element-replace-byid',
       {
@@ -177,10 +170,7 @@ PluginAPI.Editor = (function () {
    * @param {Object} category The category to find parents of
    * @param {Function} callback function([Object Category]), array of parent Category objects
    */
-  AH5Communicator.prototype.getParentCategories = function (
-    category,
-    callback
-  ) {
+  AH5Communicator.prototype.getParentCategories = function (category, callback) {
     PluginAPI.request('get-parent-categories', category, callback);
   };
 
@@ -262,19 +252,12 @@ PluginAPI.Editor = (function () {
    * @param {Options/Function} options (can be omitted) Options object, supports option 'select' - set to true to automatically select the inserted element
    * @param {Function} callback function(String), id of the newly inserted element
    */
-  AH5Communicator.prototype.insertElement = function (
-    element,
-    options,
-    callback
-  ) {
+  AH5Communicator.prototype.insertElement = function (element, options, callback) {
     var select = false;
     if (typeof options === 'object') {
       options = options || {};
       select = typeof options.select === 'boolean' ? options.select : false;
-    } else if (
-      typeof callback === 'undefined' &&
-      typeof options === 'function'
-    ) {
+    } else if (typeof callback === 'undefined' && typeof options === 'function') {
       callback = options;
     }
     PluginAPI.request(
@@ -347,12 +330,7 @@ PluginAPI.Editor = (function () {
    * @param {String} value What to set the attribute to
    * @param {Function} callback function(Boolean)
    */
-  AH5Communicator.prototype.setAttributeById = function (
-    id,
-    attribute,
-    value,
-    callback
-  ) {
+  AH5Communicator.prototype.setAttributeById = function (id, attribute, value, callback) {
     PluginAPI.request(
       'editor-element-attribute-set-byid',
       {
@@ -372,12 +350,7 @@ PluginAPI.Editor = (function () {
    * @param {String} value What to set the attribute to
    * @param {Function} callback function(Boolean)
    */
-  AH5Communicator.prototype.setStyleById = function (
-    id,
-    attribute,
-    value,
-    callback
-  ) {
+  AH5Communicator.prototype.setStyleById = function (id, attribute, value, callback) {
     PluginAPI.request(
       'editor-element-style-set-byid',
       {

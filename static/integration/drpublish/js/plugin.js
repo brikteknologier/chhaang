@@ -12,9 +12,7 @@ $(document).ready(function () {
       name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
       var regex = new RegExp('[\\?&]' + name + '=([^&#]*)'),
         results = regex.exec(location.search);
-      return results == null
-        ? ''
-        : decodeURIComponent(results[1].replace(/\+/g, ' '));
+      return results == null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
     }
 
     // register name of the app, sent as a paramter in the iframe url
@@ -62,13 +60,8 @@ $(document).ready(function () {
     if (!force && query == lastQuery) return;
     if (query != lastQuery) searchSkip = 0;
     lastQuery = query;
-    var url =
-      '/integration/drpublish/search?q=' + encodeURIComponent(query) + '&';
-    url +=
-      'limit=' +
-      searchLimit +
-      '&order_by=created&order_dir=desc&skip=' +
-      searchSkip;
+    var url = '/integration/drpublish/search?q=' + encodeURIComponent(query) + '&';
+    url += 'limit=' + searchLimit + '&order_by=created&order_dir=desc&skip=' + searchSkip;
     $.getJSON(url, showSearchResults).fail(function (jqXHR, textStatus, error) {
       if (jqXHR.status == 401) {
         var loginUrl = '/auth/login';
@@ -80,8 +73,7 @@ $(document).ready(function () {
 
   function updateThumbnail() {
     var widthSansChapters = parseInt($('#widthInput').val(), 10);
-    if ($('#chaptersInput').prop('checked'))
-      widthSansChapters -= assumedChaptersWidth;
+    if ($('#chaptersInput').prop('checked')) widthSansChapters -= assumedChaptersWidth;
     var ratio = widthSansChapters / parseInt($('#heightInput').val(), 10);
     var el = $('#videoSelected .video div');
     var thumbnailHeight = 180;
@@ -119,9 +111,7 @@ $(document).ready(function () {
       var element = $('<div>')
         .addClass('result-element')
         .append([
-          $('<span>')
-            .addClass('poster')
-            .append($('<img>').attr('src', video.poster)),
+          $('<span>').addClass('poster').append($('<img>').attr('src', video.poster)),
           $('<div>').addClass('title').html(video.title),
           $('<div>')
             .addClass('by-uploaded')
@@ -143,9 +133,7 @@ $(document).ready(function () {
     sr.html('');
 
     if (searchSkip) {
-      var prevPageElement = $('<span>')
-        .addClass('paginationButton')
-        .text('previous page');
+      var prevPageElement = $('<span>').addClass('paginationButton').text('previous page');
       prevPageElement.click(prevPage);
       sr.append(prevPageElement);
     }
@@ -153,9 +141,7 @@ $(document).ready(function () {
     sr.append($.map(videos, createElement));
 
     if (videos.length >= searchLimit) {
-      var nextPageElement = $('<span>')
-        .addClass('paginationButton')
-        .text('next page');
+      var nextPageElement = $('<span>').addClass('paginationButton').text('next page');
       nextPageElement.click(nextPage);
       sr.append(nextPageElement);
     }
@@ -272,10 +258,7 @@ $(document).ready(function () {
     PluginAPI.Editor.insertElement(element);
   });
 
-  $('.buttons input[type=number]').on(
-    'change',
-    staggerThumbnailUpdate(1000, updateThumbnail)
-  );
+  $('.buttons input[type=number]').on('change', staggerThumbnailUpdate(1000, updateThumbnail));
   $('.buttons input[type=checkbox]').on('change', chaptersCheckboxChanged);
 
   initApp();

@@ -103,11 +103,7 @@ PluginAPI.Article = (function () {
    * @param {Object} value Value to set
    * @param {Function} callback function()
    */
-  ArticleCommunicator.prototype.setCustomMeta = function (
-    name,
-    value,
-    callback
-  ) {
+  ArticleCommunicator.prototype.setCustomMeta = function (name, value, callback) {
     PluginAPI.request(
       'article-custom-meta-set',
       {
@@ -143,11 +139,7 @@ PluginAPI.Article = (function () {
    * @param {Function} errorFunction called if error
    * @param {Function} callback function(Boolean), called when tag has been set
    */
-  ArticleCommunicator.prototype.addTag = function (
-    tag,
-    errorFunction,
-    callback
-  ) {
+  ArticleCommunicator.prototype.addTag = function (tag, errorFunction, callback) {
     PluginAPI.request(
       'article-tags-add',
       {
@@ -200,10 +192,7 @@ PluginAPI.Article = (function () {
    * @param {Array} categories List of category IDs that should be set
    * @param {Function} callback function(Boolean), called when categories have been set
    */
-  ArticleCommunicator.prototype.setCategories = function (
-    categories,
-    callback
-  ) {
+  ArticleCommunicator.prototype.setCategories = function (categories, callback) {
     PluginAPI.request(
       'article-categories-selected-set',
       {
@@ -219,10 +208,7 @@ PluginAPI.Article = (function () {
    * @param {Array} categories List of category IDs to add
    * @param {Function} callback function(Boolean), called when the categories have been set
    */
-  ArticleCommunicator.prototype.addCategories = function (
-    categories,
-    callback
-  ) {
+  ArticleCommunicator.prototype.addCategories = function (categories, callback) {
     PluginAPI.request(
       'article-categories-add',
       {
@@ -238,10 +224,7 @@ PluginAPI.Article = (function () {
    * @param {Array} categories List of category IDs to remove
    * @param {Function} callback function(Boolean), called when the categories have been removed
    */
-  ArticleCommunicator.prototype.removeCategories = function (
-    categories,
-    callback
-  ) {
+  ArticleCommunicator.prototype.removeCategories = function (categories, callback) {
     PluginAPI.request(
       'article-categories-remove',
       {
@@ -257,10 +240,7 @@ PluginAPI.Article = (function () {
    * @param {Number} category The ID of the category to set as the main category
    * @param {Function} callback function(Boolean), called when the main category has been set
    */
-  ArticleCommunicator.prototype.setMainCategory = function (
-    category,
-    callback
-  ) {
+  ArticleCommunicator.prototype.setMainCategory = function (category, callback) {
     PluginAPI.request(
       'article-categories-main-set',
       {
@@ -335,10 +315,7 @@ PluginAPI.Article = (function () {
    * @param {String} published Date to be set (YYYY-MM-DD HH:MM:SS)
    * @param {Function} callback function(Boolean), called when done
    */
-  ArticleCommunicator.prototype.setPublishedDatetime = function (
-    published,
-    callback
-  ) {
+  ArticleCommunicator.prototype.setPublishedDatetime = function (published, callback) {
     PluginAPI.request(
       'article-published-set',
       {
@@ -486,10 +463,7 @@ PluginAPI.Article = (function () {
    * @param {String} content The new content for the article
    * @param {Function} callback function(Boolean), called when it has been set
    */
-  ArticleCommunicator.prototype.setCurrentContent = function (
-    content,
-    callback
-  ) {
+  ArticleCommunicator.prototype.setCurrentContent = function (content, callback) {
     PluginAPI.request(
       'article-content-set',
       {
@@ -514,10 +488,7 @@ PluginAPI.Article = (function () {
    * @param {Number} articletypeId The new article type of the article
    * @param {Function} callback function(Boolean), called when it has been set
    */
-  ArticleCommunicator.prototype.setArticletypeId = function (
-    articletypeId,
-    callback
-  ) {
+  ArticleCommunicator.prototype.setArticletypeId = function (articletypeId, callback) {
     PluginAPI.request(
       'article-type-set',
       {
@@ -586,10 +557,7 @@ PluginAPI.Article = (function () {
    * @param {Object} geolocations The location to set
    * @param {Function} callback function(Boolean), called when it has been set
    */
-  ArticleCommunicator.prototype.setGeolocations = function (
-    geolocations,
-    callback
-  ) {
+  ArticleCommunicator.prototype.setGeolocations = function (geolocations, callback) {
     PluginAPI.request(
       'article-geolocations-set',
       {
@@ -632,10 +600,7 @@ PluginAPI.Article = (function () {
    * @param {Object} properties An object of property names and corresponding values.
    * @param {Function} callback Callback called with an updated list of properties.
    */
-  ArticleCommunicator.prototype.setProperties = function (
-    properties,
-    callback
-  ) {
+  ArticleCommunicator.prototype.setProperties = function (properties, callback) {
     PluginAPI.request(
       'article-properties-set',
       {

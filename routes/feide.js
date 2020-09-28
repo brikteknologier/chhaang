@@ -41,19 +41,11 @@ module.exports = function (app, passport) {
   function accessDisallowed(idpUser) {
     function checkString(field, requiredValue) {
       if (idpUser[field] != requiredValue)
-        return (
-          field +
-          '="' +
-          idpUser[field] +
-          '", but must be "' +
-          requiredValue +
-          '"'
-        );
+        return field + '="' + idpUser[field] + '", but must be "' + requiredValue + '"';
     }
 
     function checkList(field, requiredValue) {
-      var error =
-        field + '="' + idpUser[field] + '", is missing "' + requiredValue + '"';
+      var error = field + '="' + idpUser[field] + '", is missing "' + requiredValue + '"';
       (idpUser[field] || '').split(',').forEach(function (value) {
         if (value == requiredValue) error = null;
       });
@@ -67,8 +59,7 @@ module.exports = function (app, passport) {
 
       var error = null;
 
-      if (requirement.type == 'list')
-        error = checkList(field, requirement.value);
+      if (requirement.type == 'list') error = checkList(field, requirement.value);
       else error = checkString(field, requirement.value);
 
       if (error) {
@@ -117,18 +108,14 @@ module.exports = function (app, passport) {
 
   controller.define('loginCallback', function (req, res) {
     function locallyAuthenticateFeideUser(idpUser) {
-      app.log.info(
-        'Feide auth login callback success: ' + JSON.stringify(idpUser)
-      );
+      app.log.info('Feide auth login callback success: ' + JSON.stringify(idpUser));
 
       var reason = accessDisallowed(idpUser);
       if (reason) {
         res.render('feide/accessRequirementFailed', {
           reason: reason,
           userName:
-            req.user.displayName ||
-            req.user.givenName + ' ' + req.user.sn ||
-            'Your Feide user',
+            req.user.displayName || req.user.givenName + ' ' + req.user.sn || 'Your Feide user',
           json: {
             reason: JSON.stringify(reason),
             user: JSON.stringify(req.user),
@@ -144,11 +131,7 @@ module.exports = function (app, passport) {
         // `displayName` is the user's preferred display name, but not always available
         // `givenName` and `sn` are first and last names, but not always available
         // `cn` is the user's local username, but not always available
-        name:
-          idpUser.displayName ||
-          idpUser.givenName + ' ' + idpUser.sn ||
-          idpUser.cn ||
-          idpId,
+        name: idpUser.displayName || idpUser.givenName + ' ' + idpUser.sn || idpUser.cn || idpId,
         // `mail` is available in an organization's Feide system
         // `email` is available in Feide OpenIdp.
         email: idpUser.mail || idpUser.email || '',
@@ -158,21 +141,13 @@ module.exports = function (app, passport) {
         [
           initUserModel,
           function (User, cb) {
-            User.createOrUpdateFromIdentityProvider(
-              'feide',
-              idpId,
-              translatedUser,
-              cb
-            );
+            User.createOrUpdateFromIdentityProvider('feide', idpId, translatedUser, cb);
           },
         ],
         function (err, user) {
           if (err) {
             app.log.error(
-              "Error creating or updating Feide user '" +
-                idpId +
-                "': " +
-                JSON.stringify(err)
+              "Error creating or updating Feide user '" + idpId + "': " + JSON.stringify(err)
             );
             return res.send(500, err);
           }

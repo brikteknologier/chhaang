@@ -4,9 +4,7 @@ $(document).ready(function () {
     name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
     var regex = new RegExp('[\\?&]' + name + '=([^&#]*)'),
       results = regex.exec(location.search);
-    return results == null
-      ? ''
-      : decodeURIComponent(results[1].replace(/\+/g, ' '));
+    return results == null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
   }
 
   var name = getParameterByName('appName');
@@ -24,9 +22,7 @@ $(document).ready(function () {
   $('#textButton').click(function () {
     value = getValue();
     if (value === null) {
-      AppAPI.showInfoMsg(
-        'I shall not insert an empty thing, that would just be silly'
-      );
+      AppAPI.showInfoMsg('I shall not insert an empty thing, that would just be silly');
       return false;
     }
     // insert a string at the current cursor position

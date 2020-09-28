@@ -126,10 +126,7 @@ Listeners.prototype.add = function (event, callback) {
 Listeners.prototype.remove = function (event, index) {
   'use strict';
 
-  if (
-    this._listeners[event] === undefined ||
-    this._listeners[event][index] === undefined
-  ) {
+  if (this._listeners[event] === undefined || this._listeners[event][index] === undefined) {
     return;
   }
 

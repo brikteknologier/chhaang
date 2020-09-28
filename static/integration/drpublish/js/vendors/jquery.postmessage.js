@@ -46,9 +46,7 @@ var NO_JQUERY = {};
   }
 
   $.fn.pm = function () {
-    console.log(
-      'usage: \nto send:    $.pm(options)\nto receive: $.pm.bind(type, fn, [origin])'
-    );
+    console.log('usage: \nto send:    $.pm(options)\nto receive: $.pm.bind(type, fn, [origin])');
     return this;
   };
 
@@ -173,9 +171,7 @@ var NO_JQUERY = {};
 
     _data: {},
 
-    _CHARS: '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'.split(
-      ''
-    ),
+    _CHARS: '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'.split(''),
 
     _random: function () {
       var r = [];
@@ -229,11 +225,7 @@ var NO_JQUERY = {};
         for (var i = 0, len = fns.length; i < len; i++) {
           var o = fns[i];
           if (o.origin && o.origin != '*' && e.origin !== o.origin) {
-            console.warn(
-              'postmessage message origin mismatch',
-              e.origin,
-              o.origin
-            );
+            console.warn('postmessage message origin mismatch', e.origin, o.origin);
             if (msg.errback) {
               // notify post message errback
               var error = {
@@ -376,11 +368,7 @@ var NO_JQUERY = {};
           if (o.origin) {
             var origin = /https?\:\/\/[^\/]*/.exec(hash.source.url)[0];
             if (origin !== o.origin) {
-              console.warn(
-                'postmessage message origin mismatch',
-                origin,
-                o.origin
-              );
+              console.warn('postmessage message origin mismatch', origin, o.origin);
               if (msg.errback) {
                 // notify post message errback
                 var error = {
@@ -466,9 +454,7 @@ if (!('JSON' in window && window.JSON)) {
         'Z'
       );
     };
-    String.prototype.toJSON = Number.prototype.toJSON = Boolean.prototype.toJSON = function (
-      key
-    ) {
+    String.prototype.toJSON = Number.prototype.toJSON = Boolean.prototype.toJSON = function (key) {
       return this.valueOf();
     };
   }
@@ -507,11 +493,7 @@ if (!('JSON' in window && window.JSON)) {
       mind = gap,
       partial,
       value = holder[key];
-    if (
-      value &&
-      typeof value === 'object' &&
-      typeof value.toJSON === 'function'
-    ) {
+    if (value && typeof value === 'object' && typeof value.toJSON === 'function') {
       value = value.toJSON(key);
     }
     if (typeof rep === 'function') {
@@ -632,10 +614,7 @@ if (!('JSON' in window && window.JSON)) {
         /^[\],:{}\s]*$/.test(
           text
             .replace(/\\(?:["\\\/bfnrt]|u[0-9a-fA-F]{4})/g, '@')
-            .replace(
-              /"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g,
-              ']'
-            )
+            .replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g, ']')
             .replace(/(?:^|:|,)(?:\s*\[)+/g, '')
         )
       ) {

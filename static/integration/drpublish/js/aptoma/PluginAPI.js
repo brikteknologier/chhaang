@@ -112,10 +112,7 @@ var PluginAPI = (function () {
         self.doDirectAuthentication(reply.signature, reply.iv);
       } else {
         if (this.DEBUG) {
-          console.err(
-            self.getAppName() + ': No authentication token provided by backend',
-            reply
-          );
+          console.err(self.getAppName() + ': No authentication token provided by backend', reply);
         }
       }
     });
@@ -140,10 +137,7 @@ var PluginAPI = (function () {
       },
     });
     if (this.DEBUG) {
-      console.log(
-        this.getAppName() +
-          ': Sent app-loaded signal with auth token to DrPublish'
-      );
+      console.log(this.getAppName() + ': Sent app-loaded signal with auth token to DrPublish');
     }
   };
 
@@ -157,13 +151,7 @@ var PluginAPI = (function () {
   Api.prototype.request = function (callSpec, data, callback) {
     var self = this;
     if (this.DEBUG) {
-      console.info(
-        this.getAppName() +
-          ': Requesting ' +
-          callSpec +
-          ' from parent with data',
-        data
-      );
+      console.info(this.getAppName() + ': Requesting ' + callSpec + ' from parent with data', data);
     }
 
     if (data == null) {
@@ -182,9 +170,7 @@ var PluginAPI = (function () {
 
     if (!this.authenticated) {
       if (this.DEBUG) {
-        console.warn(
-          'Call for ' + callSpec + ' delayed until app is authenticated'
-        );
+        console.warn('Call for ' + callSpec + ' delayed until app is authenticated');
       }
       this.backlog.push({ spec: callSpec, data: data, callback: callback });
       return;
@@ -214,11 +200,7 @@ var PluginAPI = (function () {
           var val = data[key];
           if (typeof val === 'function') {
             data[key] = createCallbackObject(key, val);
-          } else if (
-            typeof val === 'object' &&
-            val !== null &&
-            typeof val.map === 'function'
-          ) {
+          } else if (typeof val === 'object' && val !== null && typeof val.map === 'function') {
             data[key] = val.map(updateObject);
           } else if (typeof val === 'object' && val !== null) {
             data[key] = updateObject(val);
@@ -526,9 +508,7 @@ var PluginAPI = (function () {
     var data = {
       config: config,
       onlyPublication:
-        typeof options.onlyPublication === 'boolean'
-          ? options.onlyPublication
-          : false,
+        typeof options.onlyPublication === 'boolean' ? options.onlyPublication : false,
       success: typeof options.success === 'function' ? options.success : null,
       error: typeof options.error === 'function' ? options.error : null,
     };

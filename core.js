@@ -24,17 +24,11 @@ module.exports = function init(config, callback) {
   process.title = (config.id || 'anonymous') + '-chhaang-' + package.version;
 
   app.log = require('logginator')('chhaang', config.log);
-  require('winston-tagged-http-logger')(
-    server,
-    app.log.createSublogger('http')
-  );
+  require('winston-tagged-http-logger')(server, app.log.createSublogger('http'));
 
   // passport & session
   if (config.Feide) {
-    var strategy = new SamlStrategy(config.Feide.saml || {}, function (
-      profile,
-      next
-    ) {
+    var strategy = new SamlStrategy(config.Feide.saml || {}, function (profile, next) {
       next(null, profile);
     });
     passport.serializeUser(function (user, next) {
@@ -65,10 +59,7 @@ module.exports = function init(config, callback) {
   // authorization
   require('./site_settings')(app);
   function currentUser(req, res, next) {
-    app.kvass('/api/users/active', { headers: req.headers }, function (
-      err,
-      user
-    ) {
+    app.kvass('/api/users/active', { headers: req.headers }, function (err, user) {
       res.locals.currentUser = err ? null : user;
       next();
     });

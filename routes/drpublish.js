@@ -23,10 +23,7 @@ module.exports = function (app) {
   });
 
   controller.define('search', function (req, res, next) {
-    app.kvass('/api/users/active', { headers: req.headers }, function (
-      err,
-      user
-    ) {
+    app.kvass('/api/users/active', { headers: req.headers }, function (err, user) {
       if (err || !user) return res.send(401, 'not logged in');
 
       var urlBase = '/api/videos/search';
@@ -37,8 +34,7 @@ module.exports = function (app) {
 
       app.kvass(searchUrl, { headers: req.headers }, function (err, data) {
         if (err) {
-          if (err.statusCode < 400)
-            return res.status(err.statusCode).send(err.statusCode);
+          if (err.statusCode < 400) return res.status(err.statusCode).send(err.statusCode);
           return next(err);
         }
         res.setHeader('content-type', 'application/json');
