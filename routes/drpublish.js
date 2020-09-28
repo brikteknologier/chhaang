@@ -9,7 +9,7 @@ var aptomaAuthHandler = require('node-aptoma-plugin-auth')(
   }
 );
 
-module.exports = function(app) {
+module.exports = function (app) {
   var settings = app.settings;
   var controller = Controller();
   controller.app.set('view engine', 'jade');
@@ -23,18 +23,19 @@ module.exports = function(app) {
   });
 
   controller.define('search', function (req, res, next) {
-    app.kvass("/api/users/active", { headers: req.headers }, function(err, user) {
-      if (err || !user)
-        return res.send(401, 'not logged in');
+    app.kvass('/api/users/active', { headers: req.headers }, function (
+      err,
+      user
+    ) {
+      if (err || !user) return res.send(401, 'not logged in');
 
       var urlBase = '/api/videos/search';
-      if (!req.query.q || !req.query.q.length)
-        urlBase = '/api/videos/';
-      
+      if (!req.query.q || !req.query.q.length) urlBase = '/api/videos/';
+
       var searchUrl = urlBase + url.parse(req.url).search;
       app.log.info('querying kvass at ' + searchUrl);
-      
-      app.kvass(searchUrl, { headers: req.headers }, function(err, data) {
+
+      app.kvass(searchUrl, { headers: req.headers }, function (err, data) {
         if (err) {
           if (err.statusCode < 400)
             return res.status(err.statusCode).send(err.statusCode);
@@ -54,4 +55,4 @@ module.exports = function(app) {
   controller.get('/authenticate', 'auth');
 
   return controller;
-}
+};

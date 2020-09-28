@@ -76,28 +76,28 @@
  * <p><code>pluginElementSelected</code></p>
  * <p><code>pluginElementDeselected</code></p>
  */
-function Listeners () {
-    "use strict";
-	this._listeners = {};
+function Listeners() {
+  'use strict';
+  this._listeners = {};
 }
 
 /**
  * @deprecated Use PluginAPI.on(...) instead
  */
-Listeners.prototype.addAll = function(listeners) {
-    "use strict";
-    var createCallback = function(callback) {
-        return function(data) {
-            callback(data.data);
-        };
+Listeners.prototype.addAll = function (listeners) {
+  'use strict';
+  var createCallback = function (callback) {
+    return function (data) {
+      callback(data.data);
     };
-    for (var eventName in listeners) {
-        if (listeners.hasOwnProperty(eventName)) {
-            var callback = listeners[eventName];
-            var callWrapper = createCallback(callback);
-            PluginAPI.on(eventName, callWrapper);
-        }
+  };
+  for (var eventName in listeners) {
+    if (listeners.hasOwnProperty(eventName)) {
+      var callback = listeners[eventName];
+      var callWrapper = createCallback(callback);
+      PluginAPI.on(eventName, callWrapper);
     }
+  }
 };
 
 /**
@@ -106,15 +106,15 @@ Listeners.prototype.addAll = function(listeners) {
  * @param {String} event Event name
  * @param {Function} callback Function to call when an even of the type is received
  */
-Listeners.prototype.add = function(event, callback) {
-    "use strict";
+Listeners.prototype.add = function (event, callback) {
+  'use strict';
 
-	if (this._listeners[event] === undefined) {
-		this._listeners[event] = [];
-	}
+  if (this._listeners[event] === undefined) {
+    this._listeners[event] = [];
+  }
 
-	this._listeners[event].push(callback);
-	return this._listeners[event].length - 1;
+  this._listeners[event].push(callback);
+  return this._listeners[event].length - 1;
 };
 
 /**
@@ -123,17 +123,20 @@ Listeners.prototype.add = function(event, callback) {
  * @param {String} event Event type
  * @param {Function} index The index of the event handler to remove
  */
-Listeners.prototype.remove = function(event, index) {
-    "use strict";
+Listeners.prototype.remove = function (event, index) {
+  'use strict';
 
-	if (this._listeners[event] === undefined || this._listeners[event][index] === undefined) {
-        return;
-    }
+  if (
+    this._listeners[event] === undefined ||
+    this._listeners[event][index] === undefined
+  ) {
+    return;
+  }
 
-	/*
-	 * Set to null instead of remove to retain callback indexes
-	 */
-	this._listeners[event][index] = false;
+  /*
+   * Set to null instead of remove to retain callback indexes
+   */
+  this._listeners[event][index] = false;
 };
 
 /**
@@ -141,13 +144,13 @@ Listeners.prototype.remove = function(event, index) {
  *
  * @param {String} event Event type to remove handlers for (!event for all)
  */
-Listeners.prototype.removeAll = function(event) {
-    "use strict";
-	if (!event) {
-		this._listeners = [];
-	} else {
-		this._listeners[event] = [];
-	}
+Listeners.prototype.removeAll = function (event) {
+  'use strict';
+  if (!event) {
+    this._listeners = [];
+  } else {
+    this._listeners[event] = [];
+  }
 };
 
 /**
@@ -156,24 +159,23 @@ Listeners.prototype.removeAll = function(event) {
  * @param {String} event Event type
  * @param {Object} data The event data
  */
-Listeners.prototype.notify = function(event, data) {
-    "use strict";
-    var returnValue = true;
-	if (this._listeners[event] !== undefined) {
-		jQuery.each(this._listeners[event], function(i, e) {
-			if (e && typeof e === "function") {
-				if (data && data.params && data.params === true) {
-					var r = e.apply(null, data.data);
+Listeners.prototype.notify = function (event, data) {
+  'use strict';
+  var returnValue = true;
+  if (this._listeners[event] !== undefined) {
+    jQuery.each(this._listeners[event], function (i, e) {
+      if (e && typeof e === 'function') {
+        if (data && data.params && data.params === true) {
+          var r = e.apply(null, data.data);
 
-					if (r === false) {
-						returnValue = false;
-					}
-
-				} else if (e(data) === false) {
-                    returnValue = false;
-                }
-			}
-		});
-	}
-	return returnValue;
+          if (r === false) {
+            returnValue = false;
+          }
+        } else if (e(data) === false) {
+          returnValue = false;
+        }
+      }
+    });
+  }
+  return returnValue;
 };

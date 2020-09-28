@@ -1,5 +1,5 @@
 this.DEBUG = true;
-$(document).ready(function() {
+$(document).ready(function () {
   var currentlyEditing = null;
   var lastQuery = null;
   var searchLimit = 21;
@@ -9,10 +9,12 @@ $(document).ready(function() {
 
   function initApp() {
     function getParameterByName(name) {
-      name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-      var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
-      results = regex.exec(location.search);
-      return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+      name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+      var regex = new RegExp('[\\?&]' + name + '=([^&#]*)'),
+        results = regex.exec(location.search);
+      return results == null
+        ? ''
+        : decodeURIComponent(results[1].replace(/\+/g, ' '));
     }
 
     // register name of the app, sent as a paramter in the iframe url
@@ -24,16 +26,16 @@ $(document).ready(function() {
 
   function staggerThumbnailUpdate(ms, fn) {
     var timeout = null;
-    return function() {
+    return function () {
       if (timeout) return;
-      
-      timeout = setTimeout(function() {
+
+      timeout = setTimeout(function () {
         timeout = null;
         fn();
       }, ms);
-    }
+    };
   }
-    
+
   function staggerSearch(ms, fn) {
     var timeout = null;
     return function keyUp(evt) {
@@ -42,31 +44,36 @@ $(document).ready(function() {
         timeout = null;
       }
 
-      if (evt.keyCode == 13) { // Enter is shortcut to clear pagination and bypass stagger
+      if (evt.keyCode == 13) {
+        // Enter is shortcut to clear pagination and bypass stagger
         searchSkip = 0;
         return fn(true);
       }
 
-      timeout = setTimeout(function() {
+      timeout = setTimeout(function () {
         timeout = null;
         fn();
       }, ms);
-    }
+    };
   }
 
   function search(force) {
     var query = $('#searchInput').val();
     if (!force && query == lastQuery) return;
-    if (query != lastQuery)
-      searchSkip = 0;
+    if (query != lastQuery) searchSkip = 0;
     lastQuery = query;
-    var url = '/integration/drpublish/search?q=' + encodeURIComponent(query) + '&';
-    url += 'limit=' + searchLimit + '&order_by=created&order_dir=desc&skip=' + searchSkip;
-    $.getJSON(url, showSearchResults).fail(function(jqXHR, textStatus, error) {
+    var url =
+      '/integration/drpublish/search?q=' + encodeURIComponent(query) + '&';
+    url +=
+      'limit=' +
+      searchLimit +
+      '&order_by=created&order_dir=desc&skip=' +
+      searchSkip;
+    $.getJSON(url, showSearchResults).fail(function (jqXHR, textStatus, error) {
       if (jqXHR.status == 401) {
-        var loginUrl = "/auth/login";
+        var loginUrl = '/auth/login';
         var here = encodeURIComponent(window.location.href);
-        window.location.href = loginUrl + "?redirect=" + here;
+        window.location.href = loginUrl + '?redirect=' + here;
       }
     });
   }
@@ -83,11 +90,11 @@ $(document).ready(function() {
       Math.floor(thumbnailHeight * ratio),
       thumbnailHeight,
       false // Chapters do not scale - makes thumbnail distorted
-    ); 
+    );
     console.log($('#chaptersInput').val());
     var videoContainer = $('#videoSelected .video');
     videoContainer.html('').append(el);
- }
+  }
 
   function clickThumbnail(video, element) {
     $('.result-element').removeClass('selected');
@@ -101,7 +108,9 @@ $(document).ready(function() {
 
     updateThumbnail();
 
-    var collectedTags = $.map(video.tags || [], function(x){return x.tag}).join(', ');
+    var collectedTags = $.map(video.tags || [], function (x) {
+      return x.tag;
+    }).join(', ');
     $('#videoSelected .title').text(video.title || '(untitled)');
   }
 
@@ -110,23 +119,24 @@ $(document).ready(function() {
       var element = $('<div>')
         .addClass('result-element')
         .append([
-          $('<span>').addClass('poster').append(
-            $('<img>').attr('src', video.poster)
-          ),
+          $('<span>')
+            .addClass('poster')
+            .append($('<img>').attr('src', video.poster)),
           $('<div>').addClass('title').html(video.title),
-          $('<div>').addClass('by-uploaded').append([
-            $('<span>').addClass('label').html('Av:'),
-            $('<span>').addClass('author').html(video.author.name),
-            $('<span>').addClass('age').html(video.prettyAge)
-          ]),
-          $('<div>').addClass('description').html(video.desc)
+          $('<div>')
+            .addClass('by-uploaded')
+            .append([
+              $('<span>').addClass('label').html('Av:'),
+              $('<span>').addClass('author').html(video.author.name),
+              $('<span>').addClass('age').html(video.prettyAge),
+            ]),
+          $('<div>').addClass('description').html(video.desc),
         ])
-        .attr('title', "Publisert i " + video.folder.name)
-        .click(function(evt) {
+        .attr('title', 'Publisert i ' + video.folder.name)
+        .click(function (evt) {
           clickThumbnail(video, evt.currentTarget);
         });
-      if (!videoSelected)
-        element.click();
+      if (!videoSelected) element.click();
       return element;
     }
     var sr = $('#searchResults');
@@ -162,8 +172,7 @@ $(document).ready(function() {
 
   function prevPage() {
     searchSkip -= searchLimit;
-    if (searchSkip < 0)
-      searchSkip = 0;
+    if (searchSkip < 0) searchSkip = 0;
     search(true);
   }
 
@@ -174,14 +183,21 @@ $(document).ready(function() {
     ife.attr('height', height);
 
     var src = ife.attr('src').replace(/\?chapters=on$/, '');
-    if (enableChapters)
-      src += "?chapters=on";
+    if (enableChapters) src += '?chapters=on';
     ife.attr('src', src);
 
-    element.attr('style',
-                 'width: ' + width + 'px; ' +
-                 'height: ' + height + 'px; ' +
-                 'background: ' + STATIC_BACKGROUND + ';');
+    element.attr(
+      'style',
+      'width: ' +
+        width +
+        'px; ' +
+        'height: ' +
+        height +
+        'px; ' +
+        'background: ' +
+        STATIC_BACKGROUND +
+        ';'
+    );
   }
 
   function getInsertionElement() {
@@ -199,10 +215,16 @@ $(document).ready(function() {
   function generateEmbedElement(video) {
     var siteBase = /:\/\/([^\/]*)/.exec(window.location.href)[1];
     var urlBase = '//' + siteBase;
-    
+
     // Dummy width, height.  Will be set properly on setElementProps.
     var element = $('<div style="width: 0px; height: 0px;">');
-    var videoFrame = $('<iframe width="0" height="0" src="' + urlBase + '/video/embed/' + video.uuid + '" frameborder="0"></iframe>');
+    var videoFrame = $(
+      '<iframe width="0" height="0" src="' +
+        urlBase +
+        '/video/embed/' +
+        video.uuid +
+        '" frameborder="0"></iframe>'
+    );
     element.append(videoFrame);
 
     return element;
@@ -215,13 +237,11 @@ $(document).ready(function() {
   }
 
   function enableInsertion() {
-    $('#insertButton')
-      .removeClass('disabled')
-      .attr('title', '');
+    $('#insertButton').removeClass('disabled').attr('title', '');
   }
 
   function checkEditorType() {
-    PluginAPI.Editor.getEditorType(function(type) {
+    PluginAPI.Editor.getEditorType(function (type) {
       if (type == null || type == 'text') {
         disableInsertion();
       } else {
@@ -232,10 +252,8 @@ $(document).ready(function() {
 
   function chaptersCheckboxChanged() {
     var width = parseInt($('#widthInput').val(), 10);
-    if ($('#chaptersInput').prop('checked'))
-      width += assumedChaptersWidth;
-    else
-      width -= assumedChaptersWidth;
+    if ($('#chaptersInput').prop('checked')) width += assumedChaptersWidth;
+    else width -= assumedChaptersWidth;
     $('#widthInput').val(width);
   }
 
@@ -244,17 +262,21 @@ $(document).ready(function() {
   var staggeredSearch = staggerSearch(2000, search);
   $('#searchInput').on('keyup', staggeredSearch);
   // Search icon click emulate enter on #searchInput text field
-  $('#searchIcon').on('click', function() { staggeredSearch({keyCode: 13}); });
+  $('#searchIcon').on('click', function () {
+    staggeredSearch({ keyCode: 13 });
+  });
 
-  $('#insertButton').click(function() {
-    if ($('#insertButton').hasClass('disabled'))
-      return;
+  $('#insertButton').click(function () {
+    if ($('#insertButton').hasClass('disabled')) return;
     var element = getInsertionElement();
     PluginAPI.Editor.insertElement(element);
   });
 
-  $(".buttons input[type=number]").on('change', staggerThumbnailUpdate(1000, updateThumbnail));
-  $(".buttons input[type=checkbox]").on('change', chaptersCheckboxChanged);
+  $('.buttons input[type=number]').on(
+    'change',
+    staggerThumbnailUpdate(1000, updateThumbnail)
+  );
+  $('.buttons input[type=checkbox]').on('change', chaptersCheckboxChanged);
 
   initApp();
 
