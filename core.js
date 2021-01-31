@@ -35,6 +35,55 @@ module.exports = function init(config, callback) {
     passport.deserializeUser(function(user, next) { next(null, user); });
     passport.use(strategy);
   }
+  if(config.ad){
+    passport.serializeUser(function(user, done) {
+      done(null, user.oid);
+    });
+
+    passport.deserializeUser(function(oid, done) {
+      // todo: can we move this thang?
+      findByOid(oid, function (err, user) {
+        done(err, user);
+      });
+    });
+
+    passport.use(new OIDCStrategy({
+      identityMetadata: config.creds.identityMetadata,
+      clientID: config.creds.clientID,
+      clientSecret: config.creds.clientSecret,
+      redirectUrl: config.creds.redirectUrl,
+      responseType: config.creds.responseType,
+      responseMode: config.creds.responseMode,
+      allowHttpForRedirectUrl: config.creds.allowHttpForRedirectUrl,
+      // validateIssuer: config.creds.validateIssuer,
+      // isB2C: config.creds.isB2C,
+      // issuer: config.creds.issuer,
+      // passReqToCallback: config.creds.passReqToCallback,
+      //scope: config.creds.scope,
+      // loggingLevel: config.creds.loggingLevel, // debug maybe?
+      useCookieInsteadOfSession: true, // maybe?
+    },
+    function(iss, sub, profile, accessToken, refreshToken, done) {
+      if (!profile.oid) {
+        return done(new Error("No oid found"), null);
+      }
+      // asynchronous verification, for effect...
+      process.nextTick(function () {
+        findByOid(profile.oid, function(err, user) {
+          if (err) {
+            return done(err);
+          }
+          if (!user) {
+            // "Auto-registration"
+            users.push(profile);
+            return done(null, profile);
+          }
+          return done(null, user);
+        });
+      });
+    }
+  ));
+  }
   app.use(express.cookieParser());
   app.use(express.bodyParser());
   app.use(express.session({ secret: 'sudo apt-get install pants' }));

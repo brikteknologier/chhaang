@@ -19,6 +19,8 @@ node chhaang --config <config.json>
   a DrPublish plugin will not be provided.
 * `Feide` (optional) - a Feide SAML endpoint config object.  If omitted,
   no Feide SAML endpoint will be available.
+* `OpenID` (optional) - a Feide SAML endpoint config object.  If omitted,
+  no Feide SAML endpoint will be available.
 
 ## DrPublish configuration
 
