@@ -26,12 +26,12 @@ module.exports = function (controller, passport) {
     });
   }
 
-  if (app.settings.AD) {
-    var feideController = require('./ad')(app, passport);
-    app.use('/integration/ad/', feideController);
+  if (app.settings.OpenID) {
+    var feideController = require('./open-id')(app, passport);
+    app.use('/integration/open-id/', feideController);
   } else {
-    app.get('/integration/ad*', function (req, res) {
-      res.send(404, 'AD integration not enabled');
+    app.get('/integration/open-id*', function (req, res) {
+      res.send(404, 'Open ID integration not enabled');
     });
   }
 };

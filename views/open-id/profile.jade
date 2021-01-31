@@ -1,0 +1,11 @@
+script.
+  var userDataAsJson = !{userJson}
+  console.log(userDataAsJson)
+
+h1 Profile
+
+dl
+  dt Display name
+  dd #{user.displayName || user.cn}
+  dt Email
+  dd #{user.email || user.mail}

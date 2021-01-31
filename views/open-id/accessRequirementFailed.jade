@@ -1,0 +1,27 @@
+doctype html
+
+head
+  title Restricted Access
+  link(rel='stylesheet', href='/integration/stylesheets/feide/feide.css')
+  script.
+    var user = !{json.user}
+    var reason = !{json.reason}
+
+.segment.header
+  .segment-inner
+    h1 Restricted Access OPEN ID
+
+.segment
+  .segment-inner
+    span.username #{userName}
+    span does not have access to this BRIK Video instance.  For access, contact your system administrator, or get in touch with BRIK at
+    a(href="http://brik.no") brik.no
+
+.segment.footer
+  .segment-inner
+    span Authentication rule mismatch:
+    .error #{reason}
+
+script(type="text/javascript", src="//use.typekit.net/xds4wqv.js")
+script(type="text/javascript").
+  try{Typekit.load();}catch(e){}
