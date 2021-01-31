@@ -5,7 +5,8 @@
   "main": "chhaang.js",
   "scripts": {
     "test": "node node_modules/mocha/bin/mocha --no-deprecation test/basic.js && node node_modules/mocha/bin/mocha --no-deprecation test/server.js && node node_modules/mocha/bin/mocha --no-deprecation test/server-feide.js && node node_modules/mocha/bin/mocha --no-deprecation test/server-drpublish.js # need to run test suites in fresh processes because re-creating an express server causes header-setting-errors.",
-    "build": "tsc"
+    "build": "tsc",
+    "prepublishOnly": "npm run build"
   },
   "repository": {
     "type": "git",
