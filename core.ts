@@ -7,7 +7,11 @@ var _ = require('underscore');
 var nib = require('nib')();
 var SamlStrategy = require('passport-saml').Strategy;
 import passport from 'passport';
-import { Strategy as OpenIDStrategy, Issuer } from 'openid-client';
+import {
+  Strategy as OpenIDStrategy,
+  Issuer,
+  ClientMetadata,
+} from 'openid-client';
 import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
 import session from 'express-session';
@@ -18,7 +22,6 @@ var server = (module.exports = http.createServer());
 
 module.exports = async function init(config, callback) {
   console.log('le config', config);
-  console.log('le callback', callback);
   var controller = Controller();
   var app = controller.app;
 
@@ -76,13 +79,18 @@ Authority: https://login.microsoftonline.com/{tenant}/v2.0
       // todo: can we make this generic? Or maybe that defeats the purpose..
       // todo: to make it generic, provide a URL and a discovery URL? 🤔
 
-      const client = new issuer.Client({
+      const issuerOptions: ClientMetadata = {
         client_id: BRIK_CLIENT_ID,
-        redirect_uris: ['http://localhost:3000/cb'],
+        redirect_uris: [
+          'http://localhost:6006/integration/open-id/login/callback',
+        ],
         response_types: ['id_token'],
         // id_token_signed_response_alg (default "RS256")
-      });
+      };
 
+      console.log(issuerOptions);
+      const client = new issuer.Client(issuerOptions);
+      console.log(client.authorizationUrl());
       const strategy = new OpenIDStrategy(
         {
           client,

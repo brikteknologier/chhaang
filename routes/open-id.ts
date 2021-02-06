@@ -101,6 +101,7 @@ module.exports = function (app, passport: PassportStatic) {
 
   const passportAuth = passport.authenticate('open-id', {
     failureRedirect: '/integration/open-id/login',
+    successRedirect: 'http://localhost:6006/integration/open-id/login/callback',
     failureFlash: true,
   });
 
@@ -237,7 +238,7 @@ module.exports = function (app, passport: PassportStatic) {
 
   controller.get('/', 'index');
   controller.get('/login', 'login');
-  controller.post('/login/callback', 'loginCallback');
+  controller.get('/login/callback', 'loginCallback');
   controller.get('/logout', 'logout');
   controller.get('/logout/callback', 'logoutCallback');
   controller.get('/profile', 'profile');

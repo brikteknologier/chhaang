@@ -27,8 +27,8 @@ module.exports = function (controller, passport) {
   }
 
   if (app.settings.OpenID) {
-    var feideController = require('./open-id')(app, passport);
-    app.use('/integration/open-id/', feideController);
+    var openIDfeideController = require('./open-id')(app, passport);
+    app.use('/integration/open-id/', openIDfeideController);
   } else {
     app.get('/integration/open-id*', function (req, res) {
       res.send(404, 'Open ID integration not enabled');
