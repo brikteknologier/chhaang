@@ -1,11 +1,11 @@
 var http = require('http');
-var express = require('express');
 var Controller = require('controller');
 var imbibe = require('imbibe');
 var stylus = require('stylus');
 var _ = require('underscore');
 var nib = require('nib')();
 var SamlStrategy = require('passport-saml').Strategy;
+import express from 'express';
 import passport from 'passport';
 import {
   Strategy as OpenIDStrategy,
@@ -40,6 +40,10 @@ module.exports = async function init(config, callback) {
     app.log.createSublogger('http')
   );
 
+  app.use(cookieParser());
+  app.use(bodyParser.json());
+  app.use(bodyParser.urlencoded({ extended: false }));
+
   // passport & session
   if (config.Feide) {
     var strategy = new SamlStrategy(
@@ -62,43 +66,61 @@ module.exports = async function init(config, callback) {
   if (config.OpenID) {
     // todo: maybe one per provider here?
 
-    /*
-    Discovery document path: /.well-known/openid-configuration
+    const BRIK_AD_CLIENT_ID = 'ffc4b888-227f-4730-9df0-754534fe4b43';
+    const BRIK_AD_TENANT_ID = '0ceb80d1-08c3-4e59-93c7-d029989b96bd';
+    const BRIK_AD_CLIENT_SECRET = 'C97w6g_gSSpie_uf.as5Zlpnir3r64Oni-';
 
-Authority: https://login.microsoftonline.com/{tenant}/v2.0
-*/
+    const BRIK_FEIDE_ID = 'd8d0f6d4-336f-43c9-af5c-7f434dda4c6a';
+    const BRIK_FEIDE_CLIENT_SECRET = '539be99e-3609-467d-b9c0-0efb74b5ee07';
 
-    const BRIK_CLIENT_ID = 'ffc4b888-227f-4730-9df0-754534fe4b43';
-    const BRIK_TENANT_ID = '0ceb80d1-08c3-4e59-93c7-d029989b96bd';
+    const microsoftOpenIDURL = `https://login.microsoftonline.com/${BRIK_AD_TENANT_ID}/v2.0`;
+    const microsoftDiscoveryURL = `https://login.microsoftonline.com/${BRIK_AD_TENANT_ID}/v2.0/.well-known/openid-configuration`;
 
-    const microsoftOpenIDURL = `https://login.microsoftonline.com/${BRIK_TENANT_ID}/v2.0`;
-    const microsoftDiscoveryURL = `https://login.microsoftonline.com/${BRIK_TENANT_ID}/v2.0/.well-known/openid-configuration`;
+    const feideDiscoveryURL = `https://auth.dataporten.no/.well-known/openid-configuration`;
 
     try {
-      const issuer = await Issuer.discover(microsoftDiscoveryURL);
+      // const issuer = await Issuer.discover(microsoftOpenIDURL);
+      const issuer = await Issuer.discover(feideDiscoveryURL);
       // todo: can we make this generic? Or maybe that defeats the purpose..
       // todo: to make it generic, provide a URL and a discovery URL? 🤔
 
       const issuerOptions: ClientMetadata = {
-        client_id: BRIK_CLIENT_ID,
+        // client_id: BRIK_AD_CLIENT_ID,
+        client_id: BRIK_FEIDE_ID,
+        // client_secret: BRIK_AD_CLIENT_SECRET,
+        client_secret: BRIK_FEIDE_CLIENT_SECRET,
         redirect_uris: [
           'http://localhost:6006/integration/open-id/login/callback',
         ],
-        response_types: ['id_token'],
+        // scope:["profile"],
+        response_types: ['code'],
         // id_token_signed_response_alg (default "RS256")
       };
 
       console.log(issuerOptions);
-      const client = new issuer.Client(issuerOptions);
+      /* const client = new issuer.Client({
+        ...issuerOptions,
+        registration_endpoint: `https://login.microsoftonline.com/${BRIK_TENANT_ID}/v2.0/clients`,
+      }); */
+
+      // TODO: Prøv uten passport....!
+      const client = new issuer.Client({
+        ...issuerOptions,
+        // registration_endpoint: `https://login.microsoftonline.com/${BRIK_TENANT_ID}/v2.0/clients`,
+      });
+      // client.grant
       console.log(client.authorizationUrl());
       const strategy = new OpenIDStrategy(
         {
           client,
         },
         (tokenset, userInfo, next) => {
-          app.log.info(JSON.stringify(tokenset));
-          app.log.info(JSON.stringify(userInfo));
-          next(null, userInfo);
+          // todo: do anything with userInfo here?
+          console.log('tokenset', tokenset);
+          console.log('userInfo', userInfo);
+          /* app.log.info(JSON.stringify(tokenset));
+          app.log.info(JSON.stringify(userInfo)); */
+          next(null, tokenset.claims());
         }
       );
 
@@ -120,67 +142,24 @@ Authority: https://login.microsoftonline.com/{tenant}/v2.0
 
     // todo: when we need the access token etc to access third party APIs: https://github.com/panva/node-openid-client#authorization-code-flow
 
-    /* passport.serializeUser(function (user, done) {
-      done(null, user.oid);
+    passport.serializeUser(function (user, done) {
+      console.log('serializeUser', user);
+      done(null, user);
     });
-
-    passport.deserializeUser(function (oid, done) {
-      // todo: can we move this thang?
-      findByOid(oid, function (err, user) {
-        done(err, user);
-      });
-    }); */
-
-    /* passport.use(
-      new OpenIDStrategy(
-        {
-          identityMetadata: config.creds.identityMetadata,
-          clientID: config.creds.clientID,
-          clientSecret: config.creds.clientSecret,
-          redirectUrl: config.creds.redirectUrl,
-          responseType: config.creds.responseType,
-          responseMode: config.creds.responseMode,
-          allowHttpForRedirectUrl: config.creds.allowHttpForRedirectUrl,
-          // validateIssuer: config.creds.validateIssuer,
-          // isB2C: config.creds.isB2C,
-          // issuer: config.creds.issuer,
-          // passReqToCallback: config.creds.passReqToCallback,
-          //scope: config.creds.scope,
-          // loggingLevel: config.creds.loggingLevel, // debug maybe?
-          useCookieInsteadOfSession: true, // maybe?
-        },
-        function (iss, sub, profile, accessToken, refreshToken, done) {
-          if (!profile.oid) {
-            return done(new Error('No oid found'), null);
-          }
-          // asynchronous verification, for effect...
-          process.nextTick(function () {
-            findByOid(profile.oid, function (err, user) {
-              if (err) {
-                return done(err);
-              }
-              if (!user) {
-                // "Auto-registration"
-                users.push(profile);
-                return done(null, profile);
-              }
-              return done(null, user);
-            });
-          });
-        }
-      )
-    ); */
+    passport.deserializeUser(function (user, done) {
+      console.log('deserializeUser', user);
+      done(null, user);
+    });
   }
 
-  app.use(cookieParser());
-  app.use(bodyParser.json());
+  // app.use(express.urlencoded({ extended: false }));
   app.use(
     session({
       secret: 'sudo apt-get install pants',
       // https://github.com/expressjs/session#resave
-      resave: false,
+      // resave: false,
       // https://github.com/expressjs/session#saveuninitialized
-      saveUninitialized: true,
+      // saveUninitialized: true,
     })
   );
   app.use(passport.initialize());

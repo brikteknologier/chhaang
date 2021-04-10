@@ -22,6 +22,10 @@ module.exports = function (app, passport: PassportStatic) {
     res.render('open-id/index', app.settings);
   });
 
+  controller.define('success', function (req, res) {
+    res.send(200, 'Successfully logged in');
+  });
+
   function initUserModel(done) {
     if (User) return done(null, User);
     var seraph = seraphInit(app.config.neo4j);
@@ -100,8 +104,8 @@ module.exports = function (app, passport: PassportStatic) {
   }
 
   const passportAuth = passport.authenticate('open-id', {
-    failureRedirect: '/integration/open-id/login',
-    successRedirect: 'http://localhost:6006/integration/open-id/login/callback',
+    failureRedirect: '/integration/open-id/failure',
+    successRedirect: '/integration/open-id/success',
     failureFlash: true,
   });
 
@@ -109,6 +113,31 @@ module.exports = function (app, passport: PassportStatic) {
   /* var passportAuthLogout = passport('saml', {
     samlFallback: 'logout-request',
   }); */
+
+
+  /* todo: feide info hier:
+  https://repl.it/@afell/javascript-login-example
+  https://github.com/jhellan/example3
+
+  For de/oss som bruker C# (.NET Core), kan OpenID konfigueres slik:
+
+        .AddOpenIdConnect("oidc", options =>{
+                options.RequireHttpsMetadata = false;
+                options.MetadataAddress = "https://auth.dataporten.no/.well-known/openid-configuration";
+                options.ClientId = "xxxxxxx";
+                options.ClientSecret = "xxxxxxxxx";
+                options.ResponseType = "code";
+                options.SignedOutRedirectUri = "/home";
+                options.SaveTokens = true;
+                options.GetClaimsFromUserInfoEndpoint = true;
+                options.Scope.Add("profile");
+                options.Scope.Add("openid");
+        }
+
+
+
+
+  */
 
   controller.define('login', function (req, res) {
     var reqUrl = url.parse(req.url, true);
@@ -119,8 +148,11 @@ module.exports = function (app, passport: PassportStatic) {
   });
 
   controller.define('loginCallback', function (req, res) {
+    console.log('loginCallback req.query', req.query);
+    console.log('loginCallback req.body', req.body);
     function locallyAuthenticateOpenIdUser(idpUser) {
       // todo: remove this log, because we don't wanna log this result?
+      console.log('locallyAuthenticateOpenIdUser()');
       app.log.info(
         'Open ID auth login callback success: ' + JSON.stringify(idpUser)
       );
@@ -140,6 +172,7 @@ module.exports = function (app, passport: PassportStatic) {
         });
         return;
       }
+      console.log('idp-user', idpUser);
 
       // `eduPersonTargetedID` is available in an organization's Feide system.
       // `uid` is available in Feide OpenIdP.
@@ -194,15 +227,17 @@ module.exports = function (app, passport: PassportStatic) {
     }
 
     passportAuth(req, res, function onAuthCallbackSuccess() {
+      console.log('callback???');
       if (!req.user) {
-        app.log.error('onAuthCallbackSuccess() - No user found wtf');
-        return;
+        app.log.error('onAuthCallbackSuccess() - No user found on response');
+        res.send(500, 'User not found on response.');
       }
       // todo: wat? 👇
-      // passport.authenticate for SAML gives multiple callbacks, some without data.
-      // passport.authenticate for SAML also swallows exceptions
+
       try {
+        console.log('trying to locally authenticate open id user')
         locallyAuthenticateOpenIdUser(req.user);
+        console.log('finished trying to locally authenticate open id user')
       } catch (err) {
         app.log.error(err);
         res.send(500, 'Error handling authentication');
@@ -242,6 +277,7 @@ module.exports = function (app, passport: PassportStatic) {
   controller.get('/logout', 'logout');
   controller.get('/logout/callback', 'logoutCallback');
   controller.get('/profile', 'profile');
+  controller.get('/success', 'success');
 
   return controller;
 };
