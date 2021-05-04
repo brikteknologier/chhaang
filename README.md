@@ -40,31 +40,10 @@ node chhaang --config <config.json>
 
 ## Open ID configuration
 
-## Config format
-
-The config object format recognized by stout:
-
-```json
-{
-  "port": <stout server port>
-  "neo4j": <neo4j server endpoint OR seraph db configuration object>
-  "cookieDomain": <umbrella hostname for system - optional>
-  "stoutmeal": <path to stoutmeal config file or stoutmeal config object>
-  "colorscheme": <susebron colorscheme object or path to json file containing one>
-  "log": <logginator config>
-  "alternativeLogin": <URL to alternative login endpoint - e.g. for IdP integration>
-  "alternativeLogout": <URL to alternative logout endpoint - e.g. for IdP integration>
-}
-```
-
-      "clientSecret": "C97w6g_gSSpie_uf.as5Zlpnir3r64Oni-",
-      "discoveryURL": "https://login.microsoftonline.com/0ceb80d1-08c3-4e59-93c7-d029989b96bd/v2.0/.well-known/openid-configuration",
-      "host": "http://localhost:6006"
-
 - `clientId` - The client ID
 - `clientSecret` - The client secret
 - `discoveryURL` - The Open ID discovery URL
-- `host` - Host URL of Chaang. This is used to set callback URL
+- `host` - Host URL of Chaang. This is needed to set callback URL
 
 ### saml
 
