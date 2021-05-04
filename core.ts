@@ -59,8 +59,8 @@ module.exports = async function init(config, callback) {
     });
     passport.use('saml', strategy);
   }
-
-  if (config.OpenID) {
+  // Open ID
+  else if (config.OpenID) {
     try {
       const issuer = await Issuer.discover(config.OpenID.discoveryURL);
 
@@ -68,7 +68,7 @@ module.exports = async function init(config, callback) {
         client_id: config.OpenID.clientId,
         client_secret: config.OpenID.clientSecret,
         redirect_uris: [
-          'http://localhost:6006/integration/open-id/login/callback',
+          `${config.OpenID.host}/integration/open-id/login/callback`,
         ],
         scope: ['profile'],
         response_types: ['code'],
