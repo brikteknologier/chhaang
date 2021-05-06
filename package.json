@@ -1,6 +1,6 @@
 {
   "name": "@brik/chhaang",
-  "version": "1.5.0-RC-1",
+  "version": "1.5.0-RC-2",
   "description": "BRIK's plugin server.",
   "main": "chhaang.js",
   "scripts": {
