@@ -67,9 +67,7 @@ module.exports = async function init(config, callback) {
       const issuerOptions: ClientMetadata = {
         client_id: config.OpenID.clientId,
         client_secret: config.OpenID.clientSecret,
-        redirect_uris: [
-          `${config.OpenID.host}/integration/open-id/login/callback`,
-        ],
+        redirect_uris: [`${config.url}/integration/open-id/login/callback`],
         scope: ['profile'],
         response_types: ['code'],
       };
