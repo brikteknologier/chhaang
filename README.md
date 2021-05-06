@@ -24,6 +24,9 @@ node chhaang --config <config.json>
 - `Feide` (optional) - a Feide SAML endpoint config object. If omitted,
   no Feide SAML endpoint will be available.
 
+* `OpenID` (optional) - an Open ID config object. If omitted,
+  no Open ID endpoint will be available.
+
 ## DrPublish configuration
 
 - `width` (optional, default 600) - default width of embedded videos
@@ -34,6 +37,13 @@ node chhaang --config <config.json>
 
 - `saml` - SAML metadata config object
 - `accessRequirement` (optional, default none) - user metadata requirements for access
+
+## Open ID configuration
+
+- `clientId` - The client ID
+- `clientSecret` - The client secret
+- `discoveryURL` - The Open ID discovery URL
+- `host` - Host URL of Chaang. This is needed to set callback URL
 
 ### saml
 
