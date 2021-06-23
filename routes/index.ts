@@ -26,7 +26,7 @@ module.exports = function (controller, passport) {
     });
   }
 
-  if (app.settings.OpenIDEnabled) {
+  if (app.settings.OpenID) {
     var openIDfeideController = require('./open-id')(app, passport);
     app.use('/integration/open-id/', openIDfeideController);
   } else {
