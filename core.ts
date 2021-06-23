@@ -45,12 +45,12 @@ module.exports = async function init(config, callback) {
 
   // passport & session
   if (config.Feide) {
-    var strategy = new SamlStrategy(config.Feide.saml || {}, function (
-      profile,
-      next
-    ) {
-      next(null, profile);
-    });
+    var strategy = new SamlStrategy(
+      config.Feide.saml || {},
+      function (profile, next) {
+        next(null, profile);
+      }
+    );
     passport.serializeUser(function (user, next) {
       next(null, user);
     });
@@ -60,51 +60,39 @@ module.exports = async function init(config, callback) {
     passport.use('saml', strategy);
   }
   // Open ID
-  else if (config.OpenIDEnabled) {
+  else if (config.OpenID) {
     try {
-      if (!config.OpenIDProviders && config.OpenIDProviders.length < 1) {
-        throw new Error(
-          'Open ID is enabled but no providers registered in config'
-        );
-      }
+      const issuer = await Issuer.discover(config.OpenID.discoveryURL);
 
-      for (let provider of config.OpenIDProviders) {
-        const issuer = await Issuer.discover(provider.discoveryURL);
+      const issuerOptions: ClientMetadata = {
+        client_id: config.OpenID.clientId,
+        client_secret: config.OpenID.clientSecret,
+        redirect_uris: [`${config.url}/integration/open-id/login/callback`],
+        scope: ['profile'],
+        response_types: ['code'],
+      };
 
-        const issuerOptions: ClientMetadata = {
-          client_id: provider.clientId,
-          client_secret: provider.clientSecret,
-          redirect_uris: [
-            `${
-              config.url || 'http://localhost:6006'
-            }/integration/open-id/login/callback?provider=${provider.type}`,
-          ],
-          scope: ['profile'],
-          response_types: ['code'],
-        };
+      const client = new issuer.Client({
+        ...issuerOptions,
+      });
 
-        const client = new issuer.Client({
-          ...issuerOptions,
-        });
+      // todo: when we need the access token etc to access third party APIs: https://github.com/panva/node-openid-client#authorization-code-flow
+      const strategy = new OpenIDStrategy(
+        {
+          client,
+        },
+        (tokenset, userInfo, next) => {
+          next(null, userInfo);
+        }
+      );
 
-        // todo: when we need the access token etc to access third party APIs: https://github.com/panva/node-openid-client#authorization-code-flow
-        const strategy = new OpenIDStrategy(
-          {
-            client,
-          },
-          (tokenset, userInfo, next) => {
-            next(null, userInfo);
-          }
-        );
+      app.log.info(
+        `Using Open ID with the following issuer: ${JSON.stringify(
+          issuer.metadata
+        )}`
+      );
 
-        app.log.info(
-          `Using Open ID with the following issuer: ${JSON.stringify(
-            issuer.metadata
-          )}`
-        );
-
-        passport.use(`open-id-${provider.type}`, strategy);
-      }
+      passport.use('open-id', strategy);
     } catch (err) {
       app.log.error('Failed to initialize Open ID', err);
       callback && callback(err);
