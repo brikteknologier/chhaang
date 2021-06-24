@@ -46,13 +46,15 @@ module.exports = async function init(config, callback) {
   // passport & session
   // deprecated as we now use a list of open id providers instead of each provider explcitiyl
   if (config.Feide) {
-    app.log.warn('Using deprecated Feide integration. Please move over to Feide 2.0 by using open id providers instead');
-    var strategy = new SamlStrategy(
-      config.Feide.saml || {},
-      function (profile, next) {
-        next(null, profile);
-      }
+    app.log.warn(
+      'Using deprecated Feide integration. Please move over to Feide 2.0 by using open id providers instead'
     );
+    var strategy = new SamlStrategy(config.Feide.saml || {}, function (
+      profile,
+      next
+    ) {
+      next(null, profile);
+    });
     passport.serializeUser(function (user, next) {
       next(null, user);
     });
