@@ -21,11 +21,10 @@ node chhaang --config <config.json>
   or a stoutmeal config object. see the stoutmeal docs for more info
 - `DrPublish` (optional) - a DrPublish plugin config object. if omitted,
   a DrPublish plugin will not be provided.
-- `Feide` (optional) - a Feide SAML endpoint config object. If omitted,
+- (deprecated) `Feide` (optional) - a Feide SAML endpoint config object. If omitted,
   no Feide SAML endpoint will be available.
-
-* `OpenID` (optional) - an Open ID config object. If omitted,
-  no Open ID endpoint will be available.
+- `OpenIDEnabled` (optional) - Specify if OpenID is enabled
+* `OpenIDProviders`(optional) - Specify a list of Open ID providers. If omitted, no Open ID endpoints will be available.
 
 ## DrPublish configuration
 
@@ -33,19 +32,32 @@ node chhaang --config <config.json>
 - `height` (optional, default 338) - default height of embedded videos
 - `background` (optional, default #000) - background color of embedded videos
 
-## Feide configuration
+## Feide configuration (deprecated)
 
 - `saml` - SAML metadata config object
 - `accessRequirement` (optional, default none) - user metadata requirements for access
 
 ## Open ID configuration
-
+An array with the following values. Must be combined with `OpenIDEnabled`
 - `clientId` - The client ID
 - `clientSecret` - The client secret
 - `discoveryURL` - The Open ID discovery URL
-- `host` - Host URL of Chaang. This is needed to set callback URL
+- `type` - The type of open id provider. Currently supported types are `microsoft`and `feide`
+Example:
+```json
+{
+  ...
+  "OpenIDProviders": [{
+      "type": "microsoft", // allowed value: microsoft | feide
+      "clientId": "<client-id>",
+      "clientSecret": "<client-secret>",
+      "discoveryURL": "<discovery-url>"
+    }
+  ]
+}
+```
 
-### saml
+### saml (deprecated)
 
 - `entryPoint` - Single Sign On URL. Example: "https://openidp.feide.no/simplesaml/saml2/idp/SSOService.php"
 - `logoutUrl` - Single Sing Out URL. Example: "https://openidp.feide.no/simplesaml/saml2/idp/SingleLogoutService.php"
