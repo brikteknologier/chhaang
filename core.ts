@@ -64,39 +64,51 @@ module.exports = async function init(config, callback) {
     passport.use('saml', strategy);
   }
   // Open ID
-  else if (config.OpenID) {
+  else if (config.OpenIDEnabled) {
     try {
-      const issuer = await Issuer.discover(config.OpenID.discoveryURL);
+      if (!config.OpenIDProviders && config.OpenIDProviders.length < 1) {
+        throw new Error(
+          'Open ID is enabled but no providers registered in config'
+        );
+      }
 
-      const issuerOptions: ClientMetadata = {
-        client_id: config.OpenID.clientId,
-        client_secret: config.OpenID.clientSecret,
-        redirect_uris: [`${config.url}/integration/open-id/login/callback`],
-        scope: ['profile'],
-        response_types: ['code'],
-      };
+      for (let provider of config.OpenIDProviders) {
+        const issuer = await Issuer.discover(provider.discoveryURL);
 
-      const client = new issuer.Client({
-        ...issuerOptions,
-      });
+        const issuerOptions: ClientMetadata = {
+          client_id: provider.clientId,
+          client_secret: provider.clientSecret,
+          redirect_uris: [
+            `${
+              config.url || 'http://localhost:6006'
+            }/integration/open-id/login/callback?provider=${provider.type}`,
+          ],
+          scope: ['profile'],
+          response_types: ['code'],
+        };
 
-      // todo: when we need the access token etc to access third party APIs: https://github.com/panva/node-openid-client#authorization-code-flow
-      const strategy = new OpenIDStrategy(
-        {
-          client,
-        },
-        (tokenset, userInfo, next) => {
-          next(null, userInfo);
-        }
-      );
+        const client = new issuer.Client({
+          ...issuerOptions,
+        });
 
-      app.log.info(
-        `Using Open ID with the following issuer: ${JSON.stringify(
-          issuer.metadata
-        )}`
-      );
+        // todo: when we need the access token etc to access third party APIs: https://github.com/panva/node-openid-client#authorization-code-flow
+        const strategy = new OpenIDStrategy(
+          {
+            client,
+          },
+          (tokenset, userInfo, next) => {
+            next(null, userInfo);
+          }
+        );
 
-      passport.use('open-id', strategy);
+        app.log.info(
+          `Using Open ID with the following issuer: ${JSON.stringify(
+            issuer.metadata
+          )}`
+        );
+
+        passport.use(`open-id-${provider.type}`, strategy);
+      }
     } catch (err) {
       app.log.error('Failed to initialize Open ID', err);
       callback && callback(err);

@@ -82,21 +82,26 @@ module.exports = function (app, passport: PassportStatic) {
   function logoutCompleted(res) {
     res.redirect(defaultRedirect);
   }
-
-  const passportAuth = passport.authenticate('open-id', {
-    failureRedirect: '/integration/open-id/failure',
-    failureFlash: true,
-  });
+  const passportAuth = (provider) => {
+    return passport.authenticate(`open-id-${provider}`, {
+      failureRedirect: '/integration/open-id/failure',
+      failureFlash: true,
+    });
+  };
 
   controller.define('login', function (req, res) {
     var reqUrl = url.parse(req.url, true);
     var redirect = reqUrl.query['redirect'];
+    var provider = reqUrl.query['provider'];
     res.cookie(REDIRECT_COOKIE, redirect || '/', { maxAge: 60 * 60 * 1000 });
 
-    passportAuth(req, res);
+    passportAuth(provider)(req, res);
   });
 
   controller.define('loginCallback', function (req, res) {
+    const reqUrl = url.parse(req.url, true);
+    const provider = reqUrl.query['provider'];
+
     function locallyAuthenticateOpenIdUser(openIDUser: IOpenIDUser) {
       app.log.info(
         'Open ID auth login callback success: ' + openIDUser && openIDUser.sub
@@ -156,7 +161,7 @@ module.exports = function (app, passport: PassportStatic) {
       );
     }
 
-    passportAuth(req, res, function onAuthCallbackSuccess() {
+    passportAuth(provider)(req, res, function onAuthCallbackSuccess() {
       if (!req.user) {
         app.log.error('onAuthCallbackSuccess() - No user found on response');
         res.send(500, 'User not found on response.');
