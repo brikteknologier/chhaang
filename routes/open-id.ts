@@ -123,7 +123,7 @@ module.exports = function (app, passport: PassportStatic) {
       const openIDUserId = openIDUser.sub;
       const translatedUser = {
         name: openIDUser.name || openIDUserId,
-        email: openIDUser.email || '',
+        email: (openIDUser.email || '').toLowerCase(),
       };
 
       async.waterfall(
