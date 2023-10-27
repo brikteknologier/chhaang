@@ -53,6 +53,7 @@ module.exports = function (app, passport: PassportStatic) {
 
   // Return falsy if access allowed, or error string if disallowed
   function accessDisallowed(openIDUser: IOpenIDUser) {
+    // todo: check tid here for tenant id
     if (!openIDUser.sub) {
       return 'ID is required';
     }
@@ -63,25 +64,35 @@ module.exports = function (app, passport: PassportStatic) {
   }
 
   function invalidateAuthKey(req, res) {
+
+    let redirectURL = defaultRedirect;
+
     var authKey = sm.cookie.get(req);
-    if (authKey) {
-      sm.auth.invalidateAuthKey(authKey, function (err) {
-        if (err) {
-          app.log.error("Could not invalidate user's auth key");
-          app.log.error(err);
-        } else {
-          app.log.info('invalidated authKey ' + authKey);
-        }
-        logoutCompleted(res);
-      });
-    } else {
-      logoutCompleted(res);
+    
+    if(!authKey) {
+      return res.redirect(redirectURL);
     }
+
+    const authMethod = sm.cookie.getAuthMethod(req);
+    if(authMethod && app.config.OpenIDProviders){
+      const signOutURL = app.config.OpenIDProviders.find(provider => provider.type === authMethod)?.signOutURL
+      if(signOutURL){
+        redirectURL = app.config.openId[authMethod].signOutURL
+        // todo: maybe set the redirect url here plz: ?post_logout_redirect_uri=${options.postLogoutRedirectUri}
+      }
+    }
+
+    sm.auth.invalidateAuthKey(authKey, function (err) {
+      if (err) {
+        app.log.error("Could not invalidate user's auth key");
+        app.log.error(err);
+      } else {
+        app.log.info('invalidated authKey ' + authKey);
+      }
+      res.redirect(redirectURL);
+    });
   }
 
-  function logoutCompleted(res) {
-    res.redirect(defaultRedirect);
-  }
   const passportAuth = (provider) => {
     return passport.authenticate(`open-id-${provider}`, {
       failureRedirect: '/integration/open-id/failure',
@@ -94,7 +105,7 @@ module.exports = function (app, passport: PassportStatic) {
     var redirect = reqUrl.query['redirect'];
     var provider = reqUrl.query['provider'];
     res.cookie(REDIRECT_COOKIE, redirect || '/', { maxAge: 60 * 60 * 1000 });
-
+    
     passportAuth(provider)(req, res);
   });
 
@@ -102,12 +113,21 @@ module.exports = function (app, passport: PassportStatic) {
     const reqUrl = url.parse(req.url, true);
     const provider = reqUrl.query['provider'];
 
+    // *** To restrict tenant IDs: ***
+    // todo: if(microsoft && allowedTenantIds is defined) req => accessToken, use accessToken to send a request to check tenant. Maybe check this endpoint: https://graph.microsoft.com/v1.0/me
+    // https://stackoverflow.com/questions/50409668/how-to-get-the-organization-tenant-id-from-user-profile-using-the-microsoft-gr
+    // todo: check if we can use the microsoft login screen to restrict the user. If not, show an error message
+    // todo: use the tenantIds defined in the config file to restrict access. Add to config
+    // "allowedTenantIds":["", ""]
+
     function locallyAuthenticateOpenIdUser(openIDUser: IOpenIDUser) {
       app.log.info(
         'Open ID auth login callback success: ' + openIDUser && openIDUser.sub
       );
 
       var reason = accessDisallowed(openIDUser);
+
+      // todo: check if tenant id is allowed
       if (reason) {
         res.render('open-id/accessRequirementFailed', {
           reason: reason,
@@ -152,7 +172,7 @@ module.exports = function (app, passport: PassportStatic) {
           app.log.info('User #' + user.id + ' updated or created locally.');
 
           sm.auth.createAuthEntry(user.id, function (err, authKey) {
-            sm.cookie.set(res, user, authKey);
+            sm.cookie.set(res, user, authKey, provider);
             var redirectTo = req.cookies[REDIRECT_COOKIE] || '/';
             res.clearCookie(REDIRECT_COOKIE);
             res.redirect(redirectTo);
@@ -177,7 +197,6 @@ module.exports = function (app, passport: PassportStatic) {
   });
 
   controller.define('logout', function (req, res) {
-    // todo: revoke access tokens
     return invalidateAuthKey(req, res);
   });
 
