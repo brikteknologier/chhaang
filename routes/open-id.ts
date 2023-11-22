@@ -167,7 +167,6 @@ module.exports = function (app, passport: PassportStatic) {
             return finishProviderLogin();
           }
 
-          // TOS is le shit
           var key = uuid();
           app.redis.set(
             'agree_tos_pp_' + key,
