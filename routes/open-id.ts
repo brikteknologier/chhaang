@@ -175,9 +175,10 @@ module.exports = function (app, passport: PassportStatic) {
               if (err) {
                 app.log.error(`Unable to create TOS for user ${user.id}`);
               }
-              return finishProviderLogin();
               // todo: what is this and do we have to use it? 🤔
-              // res.json(409, { resolutionUrl: '/tc-post-agree?key=' + key });
+              // User needs to sign in again, but get notified of this.
+              // Test and see what happens.
+              return res.redirect(`/tc-post-agree?key=${key}`);
             }
           );
         }
