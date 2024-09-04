@@ -143,9 +143,9 @@ module.exports = function (app, passport: PassportStatic) {
           if (err) {
             app.log.error(
               "Error creating or updating Open ID user '" +
-                openIDUserId +
-                "': " +
-                JSON.stringify(err)
+              openIDUserId +
+              "': " +
+              JSON.stringify(err)
             );
             return res.send(500, err);
           }
@@ -175,7 +175,6 @@ module.exports = function (app, passport: PassportStatic) {
               if (err) {
                 app.log.error(`Unable to create TOS for user ${user.id}`);
               }
-              // todo: what is this and do we have to use it? 🤔
               // User needs to sign in again, but get notified of this.
               // Test and see what happens.
               return res.redirect(`/tc-post-agree?key=${key}`);
