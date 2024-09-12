@@ -9,3 +9,5 @@ newrelic_agent.log
 **/*.map
 **/*.d.ts
 !static/integration/drpublish
+
+*.DS_Store

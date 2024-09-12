@@ -5,6 +5,7 @@ var barleyInit = require('@brik/barley');
 var url = require('url');
 var async = require('async');
 var seraphInit = require('seraph');
+var uuid = require('uuid').v4;
 import { PassportStatic } from 'passport';
 
 export interface IOpenIDUser {
@@ -142,21 +143,43 @@ module.exports = function (app, passport: PassportStatic) {
           if (err) {
             app.log.error(
               "Error creating or updating Open ID user '" +
-                openIDUserId +
-                "': " +
-                JSON.stringify(err)
+              openIDUserId +
+              "': " +
+              JSON.stringify(err)
             );
             return res.send(500, err);
           }
 
-          app.log.info('User #' + user.id + ' updated or created locally.');
+          app.log.info(
+            'User #' + user.id + ' updated or created via login provider.'
+          );
 
-          sm.auth.createAuthEntry(user.id, function (err, authKey) {
-            sm.cookie.set(res, user, authKey);
-            var redirectTo = req.cookies[REDIRECT_COOKIE] || '/';
-            res.clearCookie(REDIRECT_COOKIE);
-            res.redirect(redirectTo);
-          });
+          function finishProviderLogin() {
+            sm.auth.createAuthEntry(user.id, function (err, authKey) {
+              sm.cookie.set(res, user, authKey);
+              var redirectTo = req.cookies[REDIRECT_COOKIE] || '/';
+              res.clearCookie(REDIRECT_COOKIE);
+              res.redirect(redirectTo);
+            });
+          }
+
+          if (!user.createdByIdentityProvider) {
+            return finishProviderLogin();
+          }
+
+          var key = uuid();
+          app.redis.set(
+            'agree_tos_pp_' + key,
+            JSON.stringify(user),
+            function (err) {
+              if (err) {
+                app.log.error(`Unable to create TOS for user ${user.id}`);
+              }
+              // User needs to sign in again, but get notified of this.
+              // Test and see what happens.
+              return res.redirect(`/tc-post-agree?key=${key}`);
+            }
+          );
         }
       );
     }
